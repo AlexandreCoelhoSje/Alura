@@ -1,3 +1,22 @@
+<script>
+  export default {
+    data() {
+      return {
+        greeting: "Hello World!",
+      };
+    },
+    created() { },
+    watch: {
+      $route(to, from) {
+        if (this.$jquery('#offcanvasNavbar').hasClass('show')) {
+          this.$jquery('#btnToggleSide').trigger('click');
+          this.$jquery('#body').blur();
+        }
+      }
+    }
+  };
+</script>
+
 <template>
   <div id="app">
     <header class="fixed-top">
@@ -49,10 +68,10 @@
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
           <li class="nav-item">
-            <router-link class="nav-link" to="/" >Painel Inicial</router-link>
+            <router-link class="nav-link" to="/">Painel Inicial</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/projeto" >Projeto</router-link>
+            <router-link class="nav-link" to="/projeto">Projeto</router-link>
           </li>
         </ul>
       </div>
@@ -71,25 +90,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      greeting: "Hello World!",
-    };
-  },
-  created() {},
-  watch: {
-    $route (to, from) {
-      if (this.$jquery('#offcanvasNavbar').hasClass('show')) {
-        this.$jquery('#btnToggleSide').trigger('click');
-        this.$jquery('#body').blur();
-      }
-    }
-  }
-};
-</script>
 
 <style scoped>
 header .navbar {

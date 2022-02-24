@@ -1,3 +1,36 @@
+<script>
+import ProjetoService from "@/domain/projeto/ProjetoService";
+
+export default {
+  data() {
+    return {
+      projetos: []
+    };
+  },
+  created() {
+
+    var self = this;
+    this.service = new ProjetoService(this.$jquery);
+
+    this.service
+      .lista({})
+      .done(function (projetos) {
+
+        self.projetos = projetos;  
+        console.log("ProjetoService.Lista sucesso ", projetos);      
+      })
+      .fail(function (jqXHR, textStatus) {
+        console.log("ProjetoService.Lista erro " + textStatus);
+      });
+  },
+  methods: {
+    formatarData(data) {
+      return new Date(data).toLocaleDateString();
+    }
+  }
+};
+</script>
+
 <template>
   <div class="row">
     <div class="col-10">
@@ -63,38 +96,6 @@
     </tbody>
   </table>
 </template>
-
-<script>
-import ProjetoService from "./../../domain/projeto/ProjetoService";
-export default {
-  data() {
-    return {
-      projetos: []
-    };
-  },
-  created() {
-
-    var self = this;
-    this.service = new ProjetoService(this.$jquery);
-
-    this.service
-      .lista({})
-      .done(function (projetos) {
-
-        self.projetos = projetos;  
-        console.log("ProjetoService.Lista sucesso ", projetos);      
-      })
-      .fail(function (jqXHR, textStatus) {
-        console.log("ProjetoService.Lista erro " + textStatus);
-      });
-  },
-  methods: {
-    formatarData(data) {
-      return new Date(data).toLocaleDateString();
-    }
-  }
-};
-</script>
 
 <style scoped>
 .icone-proj {
