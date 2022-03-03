@@ -1,6 +1,6 @@
-const http = {
+const constHttp = {
 
     urlApi: () => '/projeto/api/projeto'
 }
 
-export default http;
+export default constHttp;

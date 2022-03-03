@@ -1,8 +1,8 @@
 export default class ProjetoService {
 
-    constructor($jquery) {
+    constructor($jquery, $constHttp) {
 
-        this._uri = '/api/projeto'; //'/projeto/api/projeto';
+        this._uri = $constHttp.urlApi();
         this.$jquery = $jquery;
         this.$jquery.ajaxSetup({
             async: true,
