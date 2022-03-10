@@ -1,13 +1,17 @@
 export default class ProjetoService {
 
-    constructor($jquery, $constHttp) {
+    constructor(vueInstance) {
 
-        this._uri = $constHttp.urlApi();
-        this.$jquery = $jquery;
+        this.$jquery = vueInstance.$jquery;
+        this.$constHttp = vueInstance.$constHttp;
+        this._uri = this.$constHttp.urlApi();
+
         this.$jquery.ajaxSetup({
             async: true,
             cache: false,
-            dataType: 'json'
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
     }
 
@@ -20,78 +24,39 @@ export default class ProjetoService {
         });
     }
 
-    detalha(id, sucesso, erro) {
+    detalha(id) {
 
-        this.$jquery.ajax({
-                method: "GET",
-                url: this._uri + '/' + id,
-                data: {}
-            })
-            .done(function(retorno) {
-
-                console.log("ProjetoService.detalha Retorno: ", retorno);
-                sucesso(retorno);
-            })
-            .fail(function(jqXHR, textStatus) {
-
-                console.log('ProjetoService.detalha erro ' + textStatus);
-                erro(textStatus);
-            });
+        return this.$jquery.ajax({
+            method: "GET",
+            url: this._uri + '/' + id,
+            data: {}
+        });
     }
 
-    cadastra(entidade, sucesso, erro) {
+    cadastra(entidade) {
 
-        this.$jquery.ajax({
-                method: "POST",
-                url: this._uri,
-                data: entidade
-            })
-            .done(function(retorno) {
-
-                console.log("Retorno: ", retorno);
-                sucesso(retorno);
-            })
-            .fail(function(jqXHR, textStatus) {
-
-                console.log('ProjetoService.cadastra erro ' + textStatus);
-            });
-
+        return this.$jquery.ajax({
+            method: "POST",
+            url: this._uri,
+            data: entidade
+        });
     }
 
-    altera(entidade, sucesso, erro) {
+    altera(entidade) {
 
-        this.$jquery.ajax({
-                method: "PUT",
-                url: this._uri + '/' + entidade.id,
-                data: entidade
-            })
-            .done(function(retorno) {
-
-                console.log("Retorno: ", retorno);
-                sucesso(retorno);
-            })
-            .fail(function(jqXHR, textStatus) {
-
-                console.log('ProjetoService.altera erro ' + textStatus);
-            });
+        return this.$jquery.ajax({
+            method: "PUT",
+            url: this._uri + '/' + entidade.id,
+            data: entidade
+        });
     }
 
-    apaga(id, sucesso, erro) {
+    apaga(id) {
 
-        this.$jquery.ajax({
-                method: "DELETE",
-                url: this._uri + '/' + id,
-                data: entidade
-            })
-            .done(function(retorno) {
-
-                console.log("Retorno: ", retorno);
-                sucesso(retorno);
-            })
-            .fail(function(jqXHR, textStatus) {
-
-                console.log('ProjetoService.apaga erro ' + textStatus);
-            });
+        return this.$jquery.ajax({
+            method: "DELETE",
+            url: this._uri + '/' + id,
+            data: entidade
+        });
     }
-
 }

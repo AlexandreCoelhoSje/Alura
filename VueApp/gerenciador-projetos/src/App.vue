@@ -79,13 +79,17 @@ export default {
 
         <div id="corpoPrincipal">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col">
+                <div class="row justify-content-center">
+                    <div class="col-10">
                         <router-view></router-view>
                     </div>
                 </div>
             </div>
         </div>
+
+        <footer class="bg-dark">
+
+        </footer>
     </div>
 </template>
 
@@ -112,10 +116,14 @@ header #navMenuPrincipal {
 }
 
 #corpoPrincipal {
-    height: 100vh;
+    height: 97vh;
     width: 100%;
     padding: 50px;
     background-color: #fff;
+}
+
+footer {
+    height: 3vh;
 }
 
 /* xs */

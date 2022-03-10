@@ -40,7 +40,7 @@ namespace GerenciadorProjetos.Controllers
         {
             var projeto = await _context.Projetos
                 .Include(proj => proj.SituacaoProjeto)
-                .Include(proj => proj.Atividades.Max(atv => atv.AtividadeID))
+                .Include(proj => proj.Atividades.OrderByDescending(atv => atv.AtividadeID).Take(1))
                 .FirstOrDefaultAsync(proj => proj.ProjetoID == id);
 
             if (projeto == null)

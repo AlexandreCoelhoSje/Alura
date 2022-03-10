@@ -14,23 +14,23 @@ export default {
                 var nomeChave = '';
 
                 for (let i = 0; i < value.length; i++) {
-                    
+
                     let coluna = value[i];
 
                     if (!existePropInvalida) {
                         if (!coluna.hasOwnProperty('nome')) {
-                           existePropInvalida = true;
+                            existePropInvalida = true;
                             console.log('O Objeto não contem a propriedade: nome', coluna);
                         }
                         if (!coluna.hasOwnProperty('chave')) {
-                           existePropInvalida = true;
+                            existePropInvalida = true;
                             console.log('O Objeto não contem a propriedade: chave', coluna);
                         }
                         if (!coluna.hasOwnProperty('type')) {
-                           existePropInvalida = true;
+                            existePropInvalida = true;
                             console.log('O Objeto não contem a propriedade: type', coluna);
                         }
-                    } 
+                    }
                 }
 
                 return existePropInvalida ? 'danger'.includes(value) : 'success';
@@ -61,8 +61,24 @@ export default {
     methods: {
         formtarCampo(coluna, item) {
 
-            let valor = item[coluna.chave];
+            let valor = '';
 
+            //Captura o valor
+            if (coluna.type === Object) {
+
+                valor = item;
+                let propriedades = coluna.chave.split('.');
+
+                for (let i=0; i < propriedades.length; i++) {
+                    
+                    valor = valor[propriedades[i]];
+                }
+            } else {
+
+                valor = item[coluna.chave];
+            }
+
+            //Formata o valor
             if (coluna.type === Date)
                 valor = this.$util.data.formatarData(valor);
 

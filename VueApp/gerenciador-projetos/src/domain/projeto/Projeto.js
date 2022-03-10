@@ -1,6 +1,6 @@
 export default class Projeto {
 
-    constructor(projetoID = '', descricao = '', resumo = '', dataInicial = '', dataFinal = '', situacaoProjeto = '') {
+    constructor(projetoID = 0, descricao = '', resumo = '', dataInicial = '', dataFinal = '', situacaoProjeto = { situacaoProjetoID: 0, descricao: '' }) {
 
         this.projetoID = projetoID;
         this.descricao = descricao;
@@ -16,6 +16,6 @@ export default class Projeto {
         this.resumo = projeto.resumo;
         this.dataInicial = projeto.dataInicial;
         this.dataFinal = projeto.dataFinal;
-        this.situacaoProjetoID = projeto.situacaoProjetoID;
+        this.situacaoProjeto.situacaoProjetoID = projeto.situacaoProjeto.situacaoProjetoID;
     }
 }

@@ -15,8 +15,9 @@ export default {
         };
     },
     created() {
+
         var self = this;
-        this.service = new ProjetoService(this.$jquery, this.$constHttp);
+        this.service = new ProjetoService(this);
 
         this.service
             .lista({})
@@ -27,10 +28,7 @@ export default {
             .fail(function (jqXHR, textStatus) {
                 console.log("ProjetoService.Lista erro " + textStatus);
             });
-    },
-    methods: {
-
-    },
+    }
 };
 </script>
 
@@ -61,46 +59,47 @@ export default {
 
         <template v-slot:lista>
             <ExibicaoGrade
-            identificador="projetoID"
-            :colunas="[
-                {
-                    nome: '',
-                    chave: '',
-                    type: ''
-                },
-                {
-                    nome: 'Descrição',
-                    chave: 'descricao',
-                    type: String
-                },
-                {
-                    nome: 'Data Inicio',
-                    chave: 'dataInicial',
-                    type: Date
-                },
-                {
-                    nome: 'Situação',
-                    chave: 'projeto.situacaoProjeto',
-                    type: String
-                },
-                {
-                    nome: 'A Fazer',
-                    chave: '',
-                    type: ''
-                },
-                {
-                    nome: 'Fazendo',
-                    chave: '',
-                    type: ''
-                },
-                {
-                    nome: 'Feitas',
-                    chave: '',
-                    type: ''
-                }
-            ]"
-            :lista="projetos"
-            nomeRotaEditar="ProjetoEditar" />
+                identificador="projetoID"
+                :colunas="[
+                    {
+                        nome: '',
+                        chave: '',
+                        type: ''
+                    },
+                    {
+                        nome: 'Descrição',
+                        chave: 'descricao',
+                        type: String
+                    },
+                    {
+                        nome: 'Data Inicio',
+                        chave: 'dataInicial',
+                        type: Date
+                    },
+                    {
+                        nome: 'Situação',
+                        chave: 'situacaoProjeto.descricao',
+                        type: Object
+                    },
+                    {
+                        nome: 'A Fazer',
+                        chave: '',
+                        type: ''
+                    },
+                    {
+                        nome: 'Fazendo',
+                        chave: '',
+                        type: ''
+                    },
+                    {
+                        nome: 'Feitas',
+                        chave: '',
+                        type: ''
+                    }
+                ]"
+                :lista="projetos"
+                nomeRotaEditar="ProjetoEditar"
+            />
         </template>
     </PaginaListaPadrao>
 </template>

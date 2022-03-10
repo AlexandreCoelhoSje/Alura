@@ -3,7 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 //Importa o Modulo
 import Dashborad from './components/modules/DashboardPrincipal.vue'
 import Projeto from './components/modules/projeto/Projeto.vue'
-import ProjetoDados from './components/modules/projeto/ProjetoDados.vue'
+import ProjetoDados from './components/modules/projeto/ProjetoFormulario.vue'
 
 //Cria as rotas
 const routes = [

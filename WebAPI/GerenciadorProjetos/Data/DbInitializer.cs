@@ -46,16 +46,11 @@ namespace GerenciadorProjetos.Data
             #endregion
 
             #region Projetos
-            var situacoesProjeto = new SituacaoProjeto[]
-            {
-                new SituacaoProjeto{Descricao = "Aberto"},
-                new SituacaoProjeto{Descricao = "Em Andamento"},
-                new SituacaoProjeto{Descricao = "Finalizado"}
-            };
-            foreach (SituacaoProjeto s in situacoesProjeto)
-            {
-                context.SituacoesProjeto.Add(s);
-            }
+            context.SituacoesProjeto.Add(new SituacaoProjeto { Descricao = "Aberto" });
+            context.SaveChanges();
+            context.SituacoesProjeto.Add(new SituacaoProjeto { Descricao = "Em Andamento" });
+            context.SaveChanges();
+            context.SituacoesProjeto.Add(new SituacaoProjeto { Descricao = "Finalizado" });
             context.SaveChanges();
             #endregion
 
