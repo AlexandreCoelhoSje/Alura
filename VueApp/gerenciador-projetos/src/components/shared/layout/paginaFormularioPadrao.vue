@@ -19,7 +19,7 @@ export default {
     <hr />
 
      <div class="row justify-content-center">
-        <div class="col col-md-8 col-lg-6">
+        <div class="col col-md-8 col-lg-7">
             <slot name="formulario"></slot>
         </div>
     </div>

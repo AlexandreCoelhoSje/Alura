@@ -11,6 +11,7 @@ export default class Projeto {
     }
 
     projetoDTO(projeto) {
+        this.id = projeto.projetoID;
         this.projetoID = projeto.projetoID;
         this.descricao = projeto.descricao;
         this.resumo = projeto.resumo;

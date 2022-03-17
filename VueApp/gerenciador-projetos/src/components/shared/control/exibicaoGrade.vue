@@ -40,13 +40,32 @@ export default {
             type: Array,
             required: true
         },
+        colunaNomeRegistro: {
+            type: String,
+            required: false
+        },
+        habilitarDetalhar: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
         nomeRotaDetalhar: {
             type: String,
             required: false
         },
+        habilitarEditar: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
         nomeRotaEditar: {
             type: String,
             required: false
+        },
+        habilitarExcluir: {
+            type: Boolean,
+            required: false,
+            default: false
         },
         nomeRotaExcluir: {
             type: String,
@@ -69,8 +88,8 @@ export default {
                 valor = item;
                 let propriedades = coluna.chave.split('.');
 
-                for (let i=0; i < propriedades.length; i++) {
-                    
+                for (let i = 0; i < propriedades.length; i++) {
+
                     valor = valor[propriedades[i]];
                 }
             } else {
@@ -96,9 +115,9 @@ export default {
                     <th>{{ coluna.nome }}</th>
                 </template>
 
-                <th v-if="nomeRotaDetalhar" class="text-primary"></th>
-                <th v-if="nomeRotaEditar" class="text-primary"></th>
-                <th v-if="nomeRotaExcluir" class="text-primary"></th>
+                <th v-if="habilitarDetalhar" class="text-primary"></th>
+                <th v-if="habilitarEditar" class="text-primary"></th>
+                <th v-if="habilitarExcluir" class="text-primary"></th>
             </tr>
         </thead>
         <tbody>
@@ -108,13 +127,19 @@ export default {
                     :key="indexC"
                 >{{ formtarCampo(coluna, item) }}</td>
 
-                <td v-if="nomeRotaDetalhar" class="text-primary">Detalhar</td>
-                <td v-if="nomeRotaEditar" class="text-primary">
+                <td v-if="habilitarDetalhar">Detalhar</td>
+                <td v-if="habilitarEditar">
                     <router-link
+                        class="btn btn-link"
                         :to="{ name: nomeRotaEditar, params: { id: item[identificador] } }"
                     >Editar</router-link>
                 </td>
-                <td v-if="nomeRotaExcluir" class="text-danger">Excluir</td>
+                <td v-if="habilitarExcluir">
+                    <a
+                        @click="() => { $emit('excluirRegistro', item[identificador], item[this.colunaNomeRegistro]); }"
+                        class="btn btn-link"
+                    >Excluir</a>
+                </td>
             </tr>
         </tbody>
     </table>

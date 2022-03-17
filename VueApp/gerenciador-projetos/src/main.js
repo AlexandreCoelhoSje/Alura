@@ -17,15 +17,16 @@ vueApp.use({
         app.config.globalProperties.$jquery = jquery;
     }
 });
-vueApp.use({
-    install: (app, options) => {
-        app.config.globalProperties.$constHttp = constHttp;
-    }
-});
+// vueApp.use({
+//     install: (app, options) => {
+//         app.config.globalProperties.$constHttp = constHttp;
+//     }
+// });
 vueApp.use({
     install: (app, options) => {
         app.config.globalProperties.$util = {};
         app.config.globalProperties.$util.data = data;
+        app.config.globalProperties.$constHttp = constHttp;
     }
 });
 

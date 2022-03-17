@@ -1,6 +1,12 @@
 <script>
-import Projeto from "../../../domain/projeto/Projeto";
-import ProjetoService from "@/domain/projeto/ProjetoService";
+import ProjetoVue from "../projeto/Projeto.vue";
+
+import ProjetoVue from "../projeto/Projeto.vue";
+
+import Atividade from "@/domain/atividade/Atividade";
+import AtividadeService from "@/domain/atividade/AtividadeService";
+
+import ProjetoVue from '@/components/modules/projeto/Projeto.vue'
 
 import PaginaListaPadraoVue from "@/components/shared/layout/paginaListaPadrao.vue";
 import ExibicaoGradeVue from "@/components/shared/control/exibicaoGrade.vue";
@@ -10,15 +16,16 @@ export default {
     components: {
         PaginaListaPadrao: PaginaListaPadraoVue,
         ExibicaoGrade: ExibicaoGradeVue,
-        ModalConfirmacao: ModalConfirmacaoVue
+        ModalConfirmacao: ModalConfirmacaoVue,
+        ProjetoSelecao: ProjetoVue
     },
     data() {
         return {
-            tituloPagina: "Projetos",
-            projetos: [],
+            tituloPagina: "Atividades",
+            lista: [],
             entidadeAlvo: {
                 id: null,
-                nomeProjeto: '',
+                nome: '',
                 monstrarModalExclusao: false
             }
         };
@@ -35,23 +42,25 @@ export default {
 
             this.service
                 .lista({})
-                .done(function (projetos) {
-                    vueInstance.projetos = projetos;
-                    console.log("Projeto.consultar sucesso ", projetos);
+                .done(function (listaRetornada) {
+                    vueInstance.lista = listaRetornada;
+                    console.log("Atividade.consultar sucesso ", listaRetornada);
                 })
                 .fail(function (jqXHR, textStatus) {
-                    console.log("Projeto.consultar erro " + textStatus);
+                    console.log("Atividade.consultar erro " + textStatus);
                 });
         },
         excluirSelecionar(id, nome) {
 
             this.entidadeAlvo.monstrarModalExclusao = true;
-            this.entidadeAlvo.nomeProjeto = nome;
+            this.entidadeAlvo.nome = nome;
             this.entidadeAlvo.id = id;
         },
         excluirCancelar() {
 
             this.entidadeAlvo.monstrarModalExclusao = false
+            this.entidadeAlvo.nome = '';
+            this.entidadeAlvo.id = null;
         },
         excluirConfirmar(value) {
 
@@ -59,26 +68,32 @@ export default {
 
             this.service
                 .apaga(this.entidadeAlvo.id)
-                .done(function (projetos) {
+                .done(function (atividade) {
 
-                    console.log('ProjetoFormulario.excluir', projetos);
+                    console.log('Atividade.excluir', atividade);
                     vueInstance.entidadeAlvo.monstrarModalExclusao = false;
-                    vueInstance.entidadeAlvo.nomeProjeto = '';
+                    vueInstance.entidadeAlvo.nome = '';
                     vueInstance.entidadeAlvo.id = null;
                     vueInstance.consultar();
                 })
                 .fail(function (jqXHR, textStatus) {
 
-                    console.log("ProjetoService.excluir erro " + textStatus);
-                    alert('Erro ao Excluir um Projeto id:' + vueInstance.$route.params.id);
+                    console.log("Atividade.excluir erro " + textStatus);
+                    alert('Erro ao Excluir Atividade id:' + vueInstance.$route.params.id);
                 });
         }
     }
-};
+}
 </script>
 
 <template>
+
+    <ProjetoSelecao :modo="Lista">
+
+    </ProjetoSelecao>
+
     <PaginaListaPadrao :tituloPrincipal="this.tituloPagina">
+        
         <template v-slot:filtro>
             <form>
                 <div class="row mb-3">
@@ -150,6 +165,7 @@ export default {
                 @excluir-registro="excluirSelecionar"
             />
         </template>
+
     </PaginaListaPadrao>
 
     <ModalConfirmacao
@@ -163,9 +179,3 @@ export default {
         @modal-cancelar="excluirCancelar"
     />
 </template>
-
-<style scoped>
-.icone-proj {
-    width: 30px;
-}
-</style>

@@ -27,14 +27,19 @@ export default {
     methods: {
         alterar() {
 
+            var vueInstance = this;
+
             this.service
                 .altera(this.projeto)
-                .done(function (projetos) {
-                    self.projetos = projetos;
-                    console.log("ProjetoService.Lista sucesso ", projetos);
+                .done(function (retorno) {
+
+                    //vueInstance.projetos = projetos;                    
+                    console.log("ProjetoFormulario.alterar sucesso ", retorno);
+                    vueInstance.$router.push({ name: 'Projeto' });
                 })
                 .fail(function (jqXHR, textStatus) {
-                    console.log("ProjetoService.Lista erro " + textStatus);
+
+                    console.log("ProjetoFormulario.alterar erro " + textStatus);
                 });
         },
         detalhar() {
@@ -59,7 +64,7 @@ export default {
             var vueInstance = this;
 
             this.service
-                .cadastra(JSON.stringify(this.projeto))
+                .cadastra(this.projeto)
                 .done(function (projetos) {
 
                     console.log("ProjetoFormulario.cadastrar sucesso ", projetos);
@@ -94,7 +99,7 @@ export default {
 
                 <div class="row mb-3">
                     <label for="inputDataInicial" class="col-sm-2 col-form-label">Data Inicial</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-4">
                         <input
                             type="date"
                             v-model="projeto.dataInicial"
@@ -102,11 +107,8 @@ export default {
                             id="inputDataInicial"
                         />
                     </div>
-                </div>
-
-                <div class="row mb-3">
                     <label for="inputDataFinal" class="col-sm-2 col-form-label">Data Final</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-4">
                         <input
                             type="date"
                             v-model="projeto.dataFinal"
@@ -152,7 +154,12 @@ export default {
                         type="button"
                         class="btn btn-primary"
                     >Incluir</button>
-                    <button v-if="!this.modoNovo" type="button" class="btn btn-primary">Alterar</button>
+                    <button
+                        v-if="!this.modoNovo"
+                        v-on:click="this.alterar()"
+                        type="button"
+                        class="btn btn-primary"
+                    >Alterar</button>
                     <router-link class="btn btn-secondary" :to="{ name: 'Projeto' }">Voltar</router-link>
                 </div>
             </form>
