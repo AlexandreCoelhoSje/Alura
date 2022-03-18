@@ -73,6 +73,9 @@ export default {
                     <li class="nav-item">
                         <router-link class="nav-link" to="/projeto">Projeto</router-link>
                     </li>
+                     <li class="nav-item">
+                        <router-link class="nav-link" :to="{ name:'Atividade'}">Atividade</router-link>
+                    </li>
                 </ul>
             </div>
         </aside>

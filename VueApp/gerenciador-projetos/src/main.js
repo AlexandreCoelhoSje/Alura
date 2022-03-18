@@ -5,6 +5,7 @@ import 'bootstrap'
 
 import router from './router'
 import constHttp from './constants/http'
+import constModo from './constants/modo'
 import data from './util/data'
 import App from './App.vue'
 
@@ -17,16 +18,12 @@ vueApp.use({
         app.config.globalProperties.$jquery = jquery;
     }
 });
-// vueApp.use({
-//     install: (app, options) => {
-//         app.config.globalProperties.$constHttp = constHttp;
-//     }
-// });
 vueApp.use({
     install: (app, options) => {
         app.config.globalProperties.$util = {};
         app.config.globalProperties.$util.data = data;
         app.config.globalProperties.$constHttp = constHttp;
+        app.config.globalProperties.$constModo = constModo;
     }
 });
 

@@ -70,8 +70,14 @@ export default {
         nomeRotaExcluir: {
             type: String,
             required: false
+        },
+        habilitarSelecao: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
+    emits: ['selecionarRegistro', 'excluirRegistro'],
     data() {
         return {
 
@@ -118,6 +124,7 @@ export default {
                 <th v-if="habilitarDetalhar" class="text-primary"></th>
                 <th v-if="habilitarEditar" class="text-primary"></th>
                 <th v-if="habilitarExcluir" class="text-primary"></th>
+                <th v-if="habilitarSelecao" class="text-primary"></th>
             </tr>
         </thead>
         <tbody>
@@ -139,6 +146,12 @@ export default {
                         @click="() => { $emit('excluirRegistro', item[identificador], item[this.colunaNomeRegistro]); }"
                         class="btn btn-link"
                     >Excluir</a>
+                </td>
+                <td v-if="habilitarSelecao">
+                    <a
+                        @click="() => { $emit('selecionarRegistro', item[identificador]); }"
+                        class="btn btn-link"
+                    >Selecionar</a>
                 </td>
             </tr>
         </tbody>

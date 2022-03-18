@@ -1,12 +1,8 @@
 <script>
-import ProjetoVue from "../projeto/Projeto.vue";
+import Atividade from "./../../../domain/atividade/Atividade";
+import AtividadeService from "@/domain/atividade/AtividadeService.js";
 
-import ProjetoVue from "../projeto/Projeto.vue";
-
-import Atividade from "@/domain/atividade/Atividade";
-import AtividadeService from "@/domain/atividade/AtividadeService";
-
-import ProjetoVue from '@/components/modules/projeto/Projeto.vue'
+import ProjetoSelecaoVue from '@/components/modules/projeto/Projeto.vue'
 
 import PaginaListaPadraoVue from "@/components/shared/layout/paginaListaPadrao.vue";
 import ExibicaoGradeVue from "@/components/shared/control/exibicaoGrade.vue";
@@ -17,22 +13,25 @@ export default {
         PaginaListaPadrao: PaginaListaPadraoVue,
         ExibicaoGrade: ExibicaoGradeVue,
         ModalConfirmacao: ModalConfirmacaoVue,
-        ProjetoSelecao: ProjetoVue
+        ProjetoSelecao: ProjetoSelecaoVue
     },
     data() {
         return {
             tituloPagina: "Atividades",
+            tituloPaginaSelecao: "Atividades - <small>selecione um projeto</small>",
             lista: [],
             entidadeAlvo: {
                 id: null,
                 nome: '',
                 monstrarModalExclusao: false
-            }
+            },
+            modo: this.$constModo.selecao(),
+            idProjetoSelecionado: null
         };
     },
     created() {
 
-        this.service = new ProjetoService(this);
+        this.service = new AtividadeService(this);
         this.consultar();
     },
     methods: {
@@ -40,8 +39,11 @@ export default {
 
             var vueInstance = this;
 
+            let atividade = new Atividade();
+            atividade.projetoID = idProjetoSelecionado;
+
             this.service
-                .lista({})
+                .lista(atividade)
                 .done(function (listaRetornada) {
                     vueInstance.lista = listaRetornada;
                     console.log("Atividade.consultar sucesso ", listaRetornada);
@@ -81,19 +83,28 @@ export default {
                     console.log("Atividade.excluir erro " + textStatus);
                     alert('Erro ao Excluir Atividade id:' + vueInstance.$route.params.id);
                 });
+        },
+        selecione(idProjeto) {
+
+            this.idProjetoSelecionado = idProjeto;
+            this.consultar();
         }
     }
 }
 </script>
 
 <template>
+    <ProjetoSelecao
+        v-if="this.modo == this.$constModo.selecao()"
+        :tituloPagina="this.tituloPaginaSelecao"
+        :modoInicial="this.$constModo.selecao()"
+        @selecionar-registro="selecione"
+    />
 
-    <ProjetoSelecao :modo="Lista">
-
-    </ProjetoSelecao>
-
-    <PaginaListaPadrao :tituloPrincipal="this.tituloPagina">
-        
+    <PaginaListaPadrao
+        v-if="this.modo == this.$constModo.consulta()"
+        :tituloPrincipal="this.tituloPagina"
+    >
         <template v-slot:filtro>
             <form>
                 <div class="row mb-3">
@@ -165,7 +176,6 @@ export default {
                 @excluir-registro="excluirSelecionar"
             />
         </template>
-
     </PaginaListaPadrao>
 
     <ModalConfirmacao

@@ -15,7 +15,7 @@ export default {
 </script>
 
 <template>
-    <h1>{{ tituloPrincipal }}</h1>
+    <h1 v-html="tituloPrincipal"></h1>
     <hr />
 
     <!-- Filtros -->

@@ -7,6 +7,20 @@ import ExibicaoGradeVue from "@/components/shared/control/exibicaoGrade.vue";
 import ModalConfirmacaoVue from '@/components/shared/control/modalConfirmacao.vue';
 
 export default {
+    props: {
+        tituloPagina: {
+            type: String,
+            required: false,
+            default(props) {
+                return props.tituloPagina ? props.tituloPagina : 'Projetos'
+            }
+        },
+        modoInicial: {
+            type: String,
+            required: false
+        }
+    },
+    emits: ['selecionarRegistro'],
     components: {
         PaginaListaPadrao: PaginaListaPadraoVue,
         ExibicaoGrade: ExibicaoGradeVue,
@@ -14,13 +28,50 @@ export default {
     },
     data() {
         return {
-            tituloPagina: "Projetos",
             projetos: [],
             entidadeAlvo: {
                 id: null,
                 nomeProjeto: '',
                 monstrarModalExclusao: false
-            }
+            },
+            colunasGrid: [
+                {
+                    nome: '',
+                    chave: '',
+                    type: ''
+                },
+                {
+                    nome: 'Descrição',
+                    chave: 'descricao',
+                    type: String
+                },
+                {
+                    nome: 'Data Inicio',
+                    chave: 'dataInicial',
+                    type: Date
+                },
+                {
+                    nome: 'Situação',
+                    chave: 'situacaoProjeto.descricao',
+                    type: Object
+                },
+                {
+                    nome: 'A Fazer',
+                    chave: '',
+                    type: ''
+                },
+                {
+                    nome: 'Fazendo',
+                    chave: '',
+                    type: ''
+                },
+                {
+                    nome: 'Feitas',
+                    chave: '',
+                    type: ''
+                }
+            ],
+            modo: this.modoInicial ? this.modoInicial : this.$constModo.cadastro()
         };
     },
     created() {
@@ -105,49 +156,18 @@ export default {
         <template v-slot:lista>
             <ExibicaoGrade
                 identificador="projetoID"
-                :colunas="[
-                    {
-                        nome: '',
-                        chave: '',
-                        type: ''
-                    },
-                    {
-                        nome: 'Descrição',
-                        chave: 'descricao',
-                        type: String
-                    },
-                    {
-                        nome: 'Data Inicio',
-                        chave: 'dataInicial',
-                        type: Date
-                    },
-                    {
-                        nome: 'Situação',
-                        chave: 'situacaoProjeto.descricao',
-                        type: Object
-                    },
-                    {
-                        nome: 'A Fazer',
-                        chave: '',
-                        type: ''
-                    },
-                    {
-                        nome: 'Fazendo',
-                        chave: '',
-                        type: ''
-                    },
-                    {
-                        nome: 'Feitas',
-                        chave: '',
-                        type: ''
-                    }
-                ]"
-                :lista="projetos"
-                :habilitarEditar="true"
-                :habilitarExcluir="true"
-                nomeRotaEditar="ProjetoEditar"
+                :colunas="colunasGrid"
+                :lista="projetos"                
                 colunaNomeRegistro="descricao"
+                
+                :habilitarEditar="modo == this.$constModo.cadastro()"
+                nomeRotaEditar="ProjetoEditar"
+                
+                :habilitarExcluir="modo == this.$constModo.cadastro()"
                 @excluir-registro="excluirSelecionar"
+                
+                :habilitarSelecao="modo == this.$constModo.selecao()"
+                @selecionar-registro="(value) => { $emit('selecionarRegistro', value); }"
             />
         </template>
     </PaginaListaPadrao>
