@@ -1,6 +1,6 @@
 ﻿using GerenciadorProjetos.Models.Autorizacao;
 using GerenciadorProjetos.Models.Identidade;
-using GerenciadorProjetos.Models.ModeloProjeto;
+using GerenciadorProjetos.Models.Planejamento;
 using GerenciadorProjetos.Models.Scrum;
 using System;
 using System.Collections.Generic;

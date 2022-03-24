@@ -1,6 +1,6 @@
 export default class Atividade {
 
-    constructor(atividadeID = 0, codigoIdentificador = '', descricao = '', observacao = '', numeroOrdenacao = '', valoresEsforco = '', esforcoEstimado = '', esforcoReal = '', projetoID = 0, SprintID = 0, colunaKanbanID = 0) {
+    constructor(atividadeID = 0, codigoIdentificador = '', descricao = '', observacao = '', numeroOrdenacao = '', valoresEsforco = '', esforcoEstimado = '', esforcoReal = '', projetoID = 0, sprintID = 0, colunaKanbanID = 0) {
 
         this.atividadeID = atividadeID;
         this.codigoIdentificador = codigoIdentificador;
@@ -11,7 +11,7 @@ export default class Atividade {
         this.esforcoEstimado = esforcoEstimado;
         this.esforcoReal = esforcoReal;
         this.projetoID = projetoID;
-        this.dprintID = dprintID;
+        this.sprintID = sprintID;
         this.colunaKanbanID = colunaKanbanID;
     }
 
@@ -26,7 +26,7 @@ export default class Atividade {
         this.esforcoEstimado = atividade.esforcoEstimado;
         this.esforcoReal = atividade.esforcoReal;
         this.projetoID = atividade.projetoID;
-        this.dprintID = atividade.dprintID;
+        this.sprintID = atividade.sprintID;
         this.colunaKanbanID = atividade.colunaKanbanID;
     }
 }

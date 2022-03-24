@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GerenciadorProjetos.Data;
-using GerenciadorProjetos.Models.ModeloProjeto;
+using GerenciadorProjetos.Models.Planejamento;
 using GerenciadorProjetos.Repositories;
+using AutoMapper;
+using GerenciadorProjetos.Dto.Planejamento;
 
 namespace GerenciadorProjetos.Controllers
 {
@@ -16,31 +18,36 @@ namespace GerenciadorProjetos.Controllers
     public class ProjetoController : ControllerBase
     {
         private readonly ProjetoContext _context;
+        private readonly IMapper _mapper;
         private SituacaoProjetoRepository _situacaoProjetoRepository;
 
-        public ProjetoController(ProjetoContext context)
+        public ProjetoController(ProjetoContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
             _situacaoProjetoRepository = new SituacaoProjetoRepository(context);
         }
 
         // GET: api/Projeto
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Projeto>>> GetProjetos()
+        public async Task<ActionResult<IEnumerable<ProjetoDTO>>> GetProjetos()
         {
-            return await _context.Projetos
-                .Include(proj => proj.SituacaoProjeto)
-                .Include(proj => proj.Atividades)
+            var projetos = await _context.Projetos
+                .Include(a => a.SituacaoProjeto)
+                .Include(b => b.Atividades)
                 .ToListAsync();
+
+            var projetosDTO = _mapper.Map<List<ProjetoDTO>>(projetos);
+
+            return projetosDTO;
         }
 
         // GET: api/Projeto/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Projeto>> GetProjeto(int id)
+        public async Task<ActionResult<ProjetoDTO>> GetProjeto(int id)
         {
             var projeto = await _context.Projetos
                 .Include(proj => proj.SituacaoProjeto)
-                .Include(proj => proj.Atividades.OrderByDescending(atv => atv.AtividadeID).Take(1))
                 .FirstOrDefaultAsync(proj => proj.ProjetoID == id);
 
             if (projeto == null)
@@ -48,20 +55,40 @@ namespace GerenciadorProjetos.Controllers
                 return NotFound();
             }
 
-            return projeto;
+            var projetoDTO = _mapper.Map<ProjetoDTO>(projeto);
+
+            return projetoDTO;
         }
 
         // PUT: api/Projeto/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjeto(int id, Projeto projeto)
+        public async Task<IActionResult> PutProjeto(int id, ProjetoDTO projetoDto)
         {
-            if (id != projeto.ProjetoID)
+            if (id != projetoDto.ProjetoID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(projeto).State = EntityState.Modified;
+            var situacaoProjeto = _situacaoProjetoRepository.Detalhar(projetoDto.SituacaoProjetoID);
+
+            if (situacaoProjeto == null)
+            {
+                return BadRequest();
+            }
+
+            var projetoLocal = await _context.Projetos
+               .Include(proj => proj.SituacaoProjeto)
+               .FirstOrDefaultAsync(proj => proj.ProjetoID == id);
+
+            if (projetoLocal == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(projetoDto, projetoLocal);
+
+            _context.Entry(projetoLocal).State = EntityState.Modified;
+            _context.Projetos.Update(projetoLocal);
 
             try
             {
@@ -83,16 +110,26 @@ namespace GerenciadorProjetos.Controllers
         }
 
         // POST: api/Projeto
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Projeto>> PostProjeto(Projeto projeto)
+        public async Task<ActionResult<ProjetoDTO>> PostProjeto(ProjetoDTO projetoDto)
         {
-            projeto.SituacaoProjeto = _situacaoProjetoRepository.Detalhar(projeto.SituacaoProjeto.SituacaoProjetoID);
+            var situacaoProjeto = _situacaoProjetoRepository.Detalhar(projetoDto.SituacaoProjeto.SituacaoProjetoID);
+
+            if (situacaoProjeto == null)
+            {
+                return BadRequest();
+            }
+
+            //ProjetoDTO para Projeto
+            var projeto = _mapper.Map<Projeto>(projetoDto);
+
+            //Atualiza Campos Auxiliares
+            projeto.SituacaoProjeto = situacaoProjeto;
 
             _context.Projetos.Add(projeto);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjeto", new { id = projeto.ProjetoID }, projeto);
+            return CreatedAtAction("GetProjeto", new { id = projetoDto.ProjetoID }, projetoDto);
         }
 
         // DELETE: api/Projeto/5

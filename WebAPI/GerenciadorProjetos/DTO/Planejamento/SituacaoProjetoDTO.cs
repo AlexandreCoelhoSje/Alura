@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GerenciadorProjetos.Models.ModeloProjeto
+namespace GerenciadorProjetos.Dto.Planejamento
 {
-    [Table("SituacaoProjeto")]
-    public class SituacaoProjeto
+    public class SituacaoProjetoDTO
     {
         public int SituacaoProjetoID { get; set; }
-
         public string Descricao { get; set; }
     }
 }

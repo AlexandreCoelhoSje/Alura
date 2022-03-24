@@ -40,7 +40,7 @@ export default {
             var vueInstance = this;
 
             let atividade = new Atividade();
-            atividade.projetoID = idProjetoSelecionado;
+            atividade.projetoID = this.idProjetoSelecionado;
 
             this.service
                 .lista(atividade)

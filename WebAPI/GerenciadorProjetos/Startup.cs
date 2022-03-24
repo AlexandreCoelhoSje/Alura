@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GerenciadorProjetos
@@ -33,6 +34,7 @@ namespace GerenciadorProjetos
         {
             services.AddControllers();
             services.Configure<IConfiguration>(Configuration);
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(c =>
             {
@@ -59,7 +61,6 @@ namespace GerenciadorProjetos
 
             services.AddDbContext<ProjetoContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
 
             ///////////////////////////////////////////////////////////////////////////////////
             /////CORS

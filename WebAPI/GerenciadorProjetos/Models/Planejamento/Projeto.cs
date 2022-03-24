@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GerenciadorProjetos.Models.ModeloProjeto
+namespace GerenciadorProjetos.Models.Planejamento
 {
     [Table("Projeto")]
     public class Projeto
@@ -23,7 +23,7 @@ namespace GerenciadorProjetos.Models.ModeloProjeto
 
         public DateTime? DataFinal { get; set; }
 
-        [Required]
+        public int SituacaoProjetoID { get; set; }
         public SituacaoProjeto SituacaoProjeto { get; set; }
 
         public ICollection<Atividade> Atividades { get; set; }

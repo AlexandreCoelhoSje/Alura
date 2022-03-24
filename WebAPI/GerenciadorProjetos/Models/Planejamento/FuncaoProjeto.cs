@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GerenciadorProjetos.Models.ModeloProjeto
+namespace GerenciadorProjetos.Models.Planejamento
 {
     [Table("FuncaoProjeto")]
     public class FuncaoProjeto
