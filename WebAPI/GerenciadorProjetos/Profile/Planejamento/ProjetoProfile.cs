@@ -12,10 +12,14 @@ namespace GerenciadorProjetos.Profile.Planejamento
     {
         public ProjetoProfile()
         {
-            CreateMap<Projeto, ProjetoDTO>().ReverseMap();
-            //.ForMember(dest =>
-            //    dest.totalAtividade,
-            //    opt => opt.MapFrom(src => src.Atividades.Count())) ;
+            CreateMap<Projeto, ProjetoDTO>()
+                .ForMember(dest =>
+                    dest.totalAtividade,
+                    opt => opt.MapFrom(src => src.Atividades.Count()))
+            .ReverseMap()
+                .ForMember(dest =>
+                        dest.SituacaoProjeto,
+                        opt => opt.Ignore());
         }
     }
 }

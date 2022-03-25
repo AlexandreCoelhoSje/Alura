@@ -17,9 +17,9 @@ namespace GerenciadorProjetos.Dto.Planejamento
         public int SituacaoProjetoID { get; set; }
         public SituacaoProjetoDTO SituacaoProjeto { get; set; }
 
-        //public ICollection<AtividadeDTO> Atividades { get; set; }
+        public ICollection<AtividadeDTO> Atividades { get; set; }
 
-        //public int totalAtividade { get; set; }
+        public int totalAtividade { get; set; }
         //public int totalAtividadeFeita { get; set; }
         //public int totalAtividadeFazendo { get; set; }
         //public int totalAtividadeAFazer { get; set; }

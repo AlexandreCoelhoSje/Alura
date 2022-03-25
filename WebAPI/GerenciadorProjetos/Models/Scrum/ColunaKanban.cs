@@ -21,8 +21,10 @@ namespace GerenciadorProjetos.Models.Scrum
         [Required]
         public int Ordem { get; set; }
 
+        public int QuadroKanbanID { get; set; }
         public QuadroKanban QuadroKanban { get; set; }
 
+        public int TipoColunaKanbanID { get; set; }
         public TipoColunaKanban TipoColunaKanban { get; set; }
     }
 }

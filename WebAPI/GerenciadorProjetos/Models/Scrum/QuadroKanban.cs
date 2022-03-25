@@ -12,6 +12,7 @@ namespace GerenciadorProjetos.Models.Scrum
     {
         public int QuadroKanbanID { get; set; }
 
+        public int ProjetoID { get; set; }
         public Projeto Projeto { get; set; }
 
         public ICollection<ColunaKanban> ColunasKanban { get; set; }

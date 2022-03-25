@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GerenciadorProjetos.Data;
 using GerenciadorProjetos.Models.Planejamento;
+using AutoMapper;
+using GerenciadorProjetos.Dto.Planejamento;
 
 namespace GerenciadorProjetos.Controllers
 {
@@ -15,15 +17,17 @@ namespace GerenciadorProjetos.Controllers
     public class AtividadeController : ControllerBase
     {
         private readonly ProjetoContext _context;
+        private readonly IMapper _mapper;
 
-        public AtividadeController(ProjetoContext context)
+        public AtividadeController(ProjetoContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Atividade
         [HttpGet]
-        public async Task<ActionResult<Projeto>> GetAtividades(string ordenacao, bool asc, int id, string descricao)
+        public async Task<ActionResult<ProjetoDTO>> GetAtividades(string ordenacao, bool asc, int id, string descricao)
         {
             //Consulta Base
             var projeto = await _context.Projetos
@@ -34,9 +38,7 @@ namespace GerenciadorProjetos.Controllers
 
             //Filtro
             if (!string.IsNullOrEmpty(descricao))
-            {
                 projeto.Atividades = projeto.Atividades.Where(atv => atv.Descricao == descricao).ToList();
-            }
 
             //Ordenacao
             if (!string.IsNullOrEmpty(ordenacao))
@@ -47,12 +49,12 @@ namespace GerenciadorProjetos.Controllers
                     projeto.Atividades = projeto.Atividades.OrderByDescending(atv => atv.Descricao).ToList();
             }
 
-            return projeto;
+            return _mapper.Map<ProjetoDTO>(projeto);
         }
 
         // GET: api/Atividade/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Atividade>> GetAtividade(int id)
+        public async Task<ActionResult<AtividadeDTO>> GetAtividade(int id)
         {
             var atividade = await _context.Atividades
                 .Include(atv => atv.Projeto)
@@ -64,33 +66,41 @@ namespace GerenciadorProjetos.Controllers
                 return NotFound();
             }
 
-            return atividade;
+            var atividadeDto = _mapper.Map<AtividadeDTO>(atividade);
+
+            //Remove as atividade para evitar problema de serializacao no json
+            atividadeDto.Projeto.Atividades = null;
+
+            return atividadeDto;
         }
 
         // PUT: api/Atividade/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAtividade(int id, Atividade atividade)
+        public async Task<IActionResult> PutAtividade(int id, AtividadeDTO atividadeDto)
         {
-            if (id != atividade.AtividadeID)
+            if (id != atividadeDto.AtividadeID)
             {
                 return BadRequest();
             }
 
-            Atividade atividadeBanco = await _context.Atividades.FindAsync(id);
+            Atividade atividade = await _context.Atividades.FindAsync(id);
 
-            if (atividadeBanco == null)
+            if (atividade == null)
+            {
                 return NotFound();
+            }
 
-            //Aletra apenas os campos permitidos
-            atividadeBanco.Descricao = atividade.Descricao;
-            atividadeBanco.CodigoIdentificador = atividade.CodigoIdentificador;
-            atividadeBanco.EsforcoEstimado = atividade.EsforcoEstimado;
-            atividadeBanco.EsforcoReal = atividade.EsforcoReal;
-            atividadeBanco.NumeroOrdenacao = atividade.NumeroOrdenacao;
-            atividadeBanco.Observacao = atividade.Observacao;
+            if (atividade.ProjetoID != id)
+            {
+                var projeto = await _context.Projetos.FindAsync(id);
 
-            _context.Entry(atividadeBanco).State = EntityState.Modified;
+                if (projeto == null)
+                    return BadRequest();
+            }
+
+            _mapper.Map(atividadeDto, atividade);
+
+            _context.Entry(atividade).State = EntityState.Modified;
 
             try
             {
@@ -112,14 +122,24 @@ namespace GerenciadorProjetos.Controllers
         }
 
         // POST: api/Atividade
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Atividade>> PostAtividade(Atividade atividade)
+        [HttpPut("id")]
+        public async Task<ActionResult<AtividadeDTO>> PostAtividade(int id, AtividadeDTO atividadeDto)
         {
+            var projeto = await _context.Projetos.FindAsync(id);
+
+            if (projeto == null)
+                return BadRequest();
+
+            var atividade = _mapper.Map<Atividade>(atividadeDto);
+
+            atividade.ProjetoID = id;
+
             _context.Atividades.Add(atividade);
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAtividade", new { id = atividade.AtividadeID }, atividade);
+            return CreatedAtAction("GetAtividade", new { id = atividadeDto.AtividadeID }, atividadeDto);
         }
 
         // DELETE: api/Atividade/5

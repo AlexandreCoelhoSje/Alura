@@ -1,7 +1,5 @@
-﻿using System;
+﻿using GerenciadorProjetos.Models.Planejamento;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GerenciadorProjetos.Dto.Planejamento
 {
@@ -15,6 +13,9 @@ namespace GerenciadorProjetos.Dto.Planejamento
         public string ValoresEsforco { get; set; }
         public double EsforcoEstimado { get; set; }
         public double EsforcoReal { get; set; }
+
+        public int ProjetoID { get; set; }
+        public ProjetoDTO Projeto { get; set; }
 
         public ICollection<TarefaDTO> Tarefas { get; set; }
 

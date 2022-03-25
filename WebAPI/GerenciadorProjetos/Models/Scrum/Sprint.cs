@@ -24,7 +24,7 @@ namespace GerenciadorProjetos.Models.Scrum
         [Required]
         public DateTime DataFinal { get; set; }
 
-        [Required]
+        public int ProjetoID { get; set; }
         public Projeto Projeto { get; set; }
     }
 }

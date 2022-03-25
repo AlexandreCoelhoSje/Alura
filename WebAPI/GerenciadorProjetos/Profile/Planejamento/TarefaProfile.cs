@@ -11,7 +11,7 @@ namespace GerenciadorProjetos.Profile.Planejamento
     {
         public TarefaProfile()
         {
-            CreateMap<Tarefa, TarefaDTO>();
+            CreateMap<Tarefa, TarefaDTO>().ReverseMap();
         }
     }
 }

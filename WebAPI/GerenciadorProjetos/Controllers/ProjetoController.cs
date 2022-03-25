@@ -76,19 +76,19 @@ namespace GerenciadorProjetos.Controllers
                 return BadRequest();
             }
 
-            var projetoLocal = await _context.Projetos
+            var projeto = await _context.Projetos
                .Include(proj => proj.SituacaoProjeto)
                .FirstOrDefaultAsync(proj => proj.ProjetoID == id);
 
-            if (projetoLocal == null)
+            if (projeto == null)
             {
                 return NotFound();
             }
 
-            _mapper.Map(projetoDto, projetoLocal);
+            _mapper.Map(projetoDto, projeto);
 
-            _context.Entry(projetoLocal).State = EntityState.Modified;
-            _context.Projetos.Update(projetoLocal);
+            _context.Entry(projeto).State = EntityState.Modified;
+            _context.Projetos.Update(projeto);
 
             try
             {
@@ -113,7 +113,7 @@ namespace GerenciadorProjetos.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjetoDTO>> PostProjeto(ProjetoDTO projetoDto)
         {
-            var situacaoProjeto = _situacaoProjetoRepository.Detalhar(projetoDto.SituacaoProjeto.SituacaoProjetoID);
+            var situacaoProjeto = _situacaoProjetoRepository.Detalhar(projetoDto.SituacaoProjetoID);
 
             if (situacaoProjeto == null)
             {

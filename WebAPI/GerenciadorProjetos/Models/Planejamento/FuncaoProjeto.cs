@@ -1,11 +1,6 @@
 ﻿using GerenciadorProjetos.Models.Autorizacao;
 using GerenciadorProjetos.Models.Identidade;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GerenciadorProjetos.Models.Planejamento
 {
@@ -14,13 +9,13 @@ namespace GerenciadorProjetos.Models.Planejamento
     {
         public int FuncaoProjetoID { get; set; }
 
-        [Required]
+        public int UsuarioID { get; set; }
         public Usuario Usuario { get; set; }
 
-        [Required]
+        public int ProjetoID { get; set; }
         public Projeto Projeto { get; set; }
 
-        [Required]
+        public int FuncaoID { get; set; }
         public Funcao Funcao { get; set; }
     }
 }

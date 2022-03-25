@@ -17,6 +17,7 @@ namespace GerenciadorProjetos.Models.Planejamento
 
         public double? Ordem { get; set; }
 
+        public int AtividadeID { get; set; }
         public Atividade Atividade { get; set; }
     }
 }
