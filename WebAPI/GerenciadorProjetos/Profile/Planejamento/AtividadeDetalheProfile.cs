@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace GerenciadorProjetos.Profile.Planejamento
 {
-    public class AtividadeProfile : AutoMapper.Profile
+    public class AtividadeDetalheProfile : AutoMapper.Profile
     {
-        public AtividadeProfile()
+        public AtividadeDetalheProfile()
         {
-            CreateMap<Atividade, AtividadeDTO>()
+            CreateMap<Atividade, AtividadeDetalheDTO>()
                 .ForMember(dest => 
-                    dest.Projeto, 
-                    opt => opt.MapFrom(src => src.Projeto.Descricao))
+                    dest.ProjetoDescricao, 
+                    opt => opt.MapFrom(src => src.Projeto == null ? "" : src.Projeto.Descricao))
             .ReverseMap()
                 .ForMember(dest =>
-                        dest.Projeto,
-                        opt => opt.Ignore());
+                    dest.Projeto,
+                    opt => opt.Ignore());
         }
     }
 }

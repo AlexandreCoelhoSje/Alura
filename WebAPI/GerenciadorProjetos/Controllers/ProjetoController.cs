@@ -30,21 +30,21 @@ namespace GerenciadorProjetos.Controllers
 
         // GET: api/Projeto
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjetoDTO>>> GetProjetos()
+        public async Task<ActionResult<IEnumerable<ProjetoConsultaDTO>>> GetProjetos()
         {
             var projetos = await _context.Projetos
                 .Include(a => a.SituacaoProjeto)
                 .Include(b => b.Atividades)
                 .ToListAsync();
 
-            var projetosDTO = _mapper.Map<List<ProjetoDTO>>(projetos);
+            var projetosDTO = _mapper.Map<List<ProjetoConsultaDTO>>(projetos);
 
             return projetosDTO;
         }
 
         // GET: api/Projeto/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProjetoDTO>> GetProjeto(int id)
+        public async Task<ActionResult<ProjetoDetalheDTO>> GetProjeto(int id)
         {
             var projeto = await _context.Projetos
                 .Include(proj => proj.SituacaoProjeto)
@@ -55,14 +55,14 @@ namespace GerenciadorProjetos.Controllers
                 return NotFound();
             }
 
-            var projetoDTO = _mapper.Map<ProjetoDTO>(projeto);
+            var projetoDTO = _mapper.Map<ProjetoDetalheDTO>(projeto);
 
             return projetoDTO;
         }
 
         // PUT: api/Projeto/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjeto(int id, ProjetoDTO projetoDto)
+        public async Task<IActionResult> PutProjeto(int id, ProjetoDetalheDTO projetoDto)
         {
             if (id != projetoDto.ProjetoID)
             {
@@ -76,9 +76,7 @@ namespace GerenciadorProjetos.Controllers
                 return BadRequest();
             }
 
-            var projeto = await _context.Projetos
-               .Include(proj => proj.SituacaoProjeto)
-               .FirstOrDefaultAsync(proj => proj.ProjetoID == id);
+            var projeto = await _context.Projetos.FindAsync(id);
 
             if (projeto == null)
             {
@@ -111,7 +109,7 @@ namespace GerenciadorProjetos.Controllers
 
         // POST: api/Projeto
         [HttpPost]
-        public async Task<ActionResult<ProjetoDTO>> PostProjeto(ProjetoDTO projetoDto)
+        public async Task<ActionResult<ProjetoDetalheDTO>> PostProjeto(ProjetoDetalheDTO projetoDto)
         {
             var situacaoProjeto = _situacaoProjetoRepository.Detalhar(projetoDto.SituacaoProjetoID);
 
@@ -122,9 +120,6 @@ namespace GerenciadorProjetos.Controllers
 
             //ProjetoDTO para Projeto
             var projeto = _mapper.Map<Projeto>(projetoDto);
-
-            //Atualiza Campos Auxiliares
-            projeto.SituacaoProjeto = situacaoProjeto;
 
             _context.Projetos.Add(projeto);
             await _context.SaveChangesAsync();

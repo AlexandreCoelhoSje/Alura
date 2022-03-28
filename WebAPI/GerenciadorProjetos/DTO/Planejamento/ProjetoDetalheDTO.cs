@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GerenciadorProjetos.Dto.Planejamento
 {
-    public class ProjetoDTO
+    public class ProjetoDetalheDTO
     {
         public int ProjetoID { get; set; }
         public string Descricao { get; set; }
@@ -16,12 +16,5 @@ namespace GerenciadorProjetos.Dto.Planejamento
 
         public int SituacaoProjetoID { get; set; }
         public SituacaoProjetoDTO SituacaoProjeto { get; set; }
-
-        public ICollection<AtividadeDTO> Atividades { get; set; }
-
-        public int totalAtividade { get; set; }
-        //public int totalAtividadeFeita { get; set; }
-        //public int totalAtividadeFazendo { get; set; }
-        //public int totalAtividadeAFazer { get; set; }
     }
 }

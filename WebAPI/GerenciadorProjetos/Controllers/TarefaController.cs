@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GerenciadorProjetos.Data;
 using GerenciadorProjetos.Models.Planejamento;
+using AutoMapper;
+using GerenciadorProjetos.Dto.Planejamento;
 
 namespace GerenciadorProjetos.Controllers
 {
@@ -15,22 +17,42 @@ namespace GerenciadorProjetos.Controllers
     public class TarefaController : ControllerBase
     {
         private readonly ProjetoContext _context;
+        private readonly IMapper _mapper;
 
-        public TarefaController(ProjetoContext context)
+        public TarefaController(ProjetoContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Tarefa
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tarefa>>> GetTarefas()
+        public async Task<ActionResult<IEnumerable<TarefaDTO>>> GetTarefas(string ordenacao, bool? asc, int id, string descricao)
         {
-            return await _context.Tarefas.ToListAsync();
+            //Consulta Base
+            var tarefas = await _context.Tarefas
+                .Where(ent => ent.AtividadeID == id)
+                .ToListAsync();
+
+            //Filtro
+            if (!string.IsNullOrEmpty(descricao))
+                tarefas = tarefas.Where(ent => ent.Descricao.Contains(descricao)).ToList();
+
+            //Ordenacao
+            if (!string.IsNullOrEmpty(ordenacao))
+            {
+                if (asc == true)
+                    tarefas = tarefas.OrderBy(ent => ent.Descricao).ToList();
+                else
+                    tarefas = tarefas.OrderByDescending(ent => ent.Descricao).ToList();
+            }
+
+            return _mapper.Map<List<TarefaDTO>>(tarefas);
         }
 
         // GET: api/Tarefa/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tarefa>> GetTarefa(int id)
+        public async Task<ActionResult<TarefaDTO>> GetTarefa(int id)
         {
             var tarefa = await _context.Tarefas.FindAsync(id);
 
@@ -39,18 +61,26 @@ namespace GerenciadorProjetos.Controllers
                 return NotFound();
             }
 
-            return tarefa;
+            return _mapper.Map<TarefaDTO>(tarefa);
         }
 
         // PUT: api/Tarefa/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTarefa(int id, Tarefa tarefa)
+        public async Task<IActionResult> PutTarefa(int id, TarefaDTO tarefaDto)
         {
-            if (id != tarefa.TarefaID)
+            if (id != tarefaDto.TarefaID)
             {
                 return BadRequest();
             }
+            
+            var tarefa = await _context.Tarefas.FindAsync(id);
+
+            if (tarefa.AtividadeID != tarefaDto.AtividadeID)
+            {
+                return BadRequest();
+            }
+
+            _mapper.Map(tarefaDto, tarefa);
 
             _context.Entry(tarefa).State = EntityState.Modified;
 
@@ -74,14 +104,20 @@ namespace GerenciadorProjetos.Controllers
         }
 
         // POST: api/Tarefa
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tarefa>> PostTarefa(Tarefa tarefa)
+        public async Task<ActionResult<Tarefa>> PostTarefa(TarefaDTO tarefaDto)
         {
+            if (!_context.Atividades.Any(ent => ent.AtividadeID == tarefaDto.AtividadeID))
+            {
+                BadRequest();
+            }
+
+            var tarefa = _mapper.Map<Tarefa>(tarefaDto);
+
             _context.Tarefas.Add(tarefa);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTarefa", new { id = tarefa.TarefaID }, tarefa);
+            return CreatedAtAction("GetTarefa", new { id = tarefa.TarefaID }, _mapper.Map<TarefaDTO>(tarefa));
         }
 
         // DELETE: api/Tarefa/5

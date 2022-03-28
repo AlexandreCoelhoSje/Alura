@@ -27,34 +27,32 @@ namespace GerenciadorProjetos.Controllers
 
         // GET: api/Atividade
         [HttpGet]
-        public async Task<ActionResult<ProjetoDTO>> GetAtividades(string ordenacao, bool asc, int id, string descricao)
+        public async Task<ActionResult<List<AtividadeConsultaDTO>>> GetAtividades(string ordenacao, bool? asc, int id, string descricao)
         {
             //Consulta Base
-            var projeto = await _context.Projetos
-                .Include(proj => proj.Atividades)
-                .Include(proj => proj.SituacaoProjeto)
+            var listaAtividades = await _context.Atividades
                 .Where(proj => proj.ProjetoID == id)
-                .FirstAsync();
+                .ToListAsync();
 
             //Filtro
             if (!string.IsNullOrEmpty(descricao))
-                projeto.Atividades = projeto.Atividades.Where(atv => atv.Descricao == descricao).ToList();
+                listaAtividades = listaAtividades.Where(atv => atv.Descricao.Contains(descricao)).ToList();
 
             //Ordenacao
             if (!string.IsNullOrEmpty(ordenacao))
-            { 
-                if (asc)
-                    projeto.Atividades = projeto.Atividades.OrderBy(atv => atv.Descricao).ToList();
+            {
+                if (asc == true)
+                    listaAtividades = listaAtividades.OrderBy(atv => atv.Descricao).ToList();
                 else
-                    projeto.Atividades = projeto.Atividades.OrderByDescending(atv => atv.Descricao).ToList();
+                    listaAtividades = listaAtividades.OrderByDescending(atv => atv.Descricao).ToList();
             }
 
-            return _mapper.Map<ProjetoDTO>(projeto);
+            return _mapper.Map<List<AtividadeConsultaDTO>>(listaAtividades);
         }
 
         // GET: api/Atividade/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AtividadeDTO>> GetAtividade(int id)
+        public async Task<ActionResult<AtividadeDetalheDTO>> GetAtividade(int id)
         {
             var atividade = await _context.Atividades
                 .Include(atv => atv.Projeto)
@@ -66,17 +64,12 @@ namespace GerenciadorProjetos.Controllers
                 return NotFound();
             }
 
-            var atividadeDto = _mapper.Map<AtividadeDTO>(atividade);
-
-            //Remove as atividade para evitar problema de serializacao no json
-            //atividadeDto.Projeto.Atividades = null;
-
-            return atividadeDto;
+            return _mapper.Map<AtividadeDetalheDTO>(atividade);
         }
 
         // PUT: api/Atividade/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAtividade(int id, AtividadeDTO atividadeDto)
+        public async Task<IActionResult> PutAtividade(int id, AtividadeDetalheDTO atividadeDto)
         {
             if (id != atividadeDto.AtividadeID)
             {
@@ -90,9 +83,9 @@ namespace GerenciadorProjetos.Controllers
                 return NotFound();
             }
 
-            if (atividade.ProjetoID != id)
+            if (atividade.ProjetoID != atividadeDto.ProjetoID)
             {
-                var projeto = await _context.Projetos.FindAsync(id);
+                var projeto = await _context.Projetos.FindAsync(atividadeDto.ProjetoID);
 
                 if (projeto == null)
                     return BadRequest();
@@ -123,23 +116,20 @@ namespace GerenciadorProjetos.Controllers
 
         // POST: api/Atividade
         [HttpPost]
-        [HttpPut("id")]
-        public async Task<ActionResult<AtividadeDTO>> PostAtividade(int id, AtividadeDTO atividadeDto)
+        public async Task<ActionResult<AtividadeDetalheDTO>> PostAtividade(AtividadeDetalheDTO atividadeDto)
         {
-            var projeto = await _context.Projetos.FindAsync(id);
+            var projeto = await _context.Projetos.FindAsync(atividadeDto.ProjetoID);
 
             if (projeto == null)
                 return BadRequest();
 
             var atividade = _mapper.Map<Atividade>(atividadeDto);
 
-            atividade.ProjetoID = id;
-
             _context.Atividades.Add(atividade);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAtividade", new { id = atividadeDto.AtividadeID }, atividadeDto);
+            return CreatedAtAction("GetAtividade", new { id = atividadeDto.AtividadeID }, _mapper.Map<AtividadeDetalheDTO>(atividade));
         }
 
         // DELETE: api/Atividade/5
