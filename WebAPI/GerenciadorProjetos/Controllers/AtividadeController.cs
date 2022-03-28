@@ -69,7 +69,7 @@ namespace GerenciadorProjetos.Controllers
             var atividadeDto = _mapper.Map<AtividadeDTO>(atividade);
 
             //Remove as atividade para evitar problema de serializacao no json
-            atividadeDto.Projeto.Atividades = null;
+            //atividadeDto.Projeto.Atividades = null;
 
             return atividadeDto;
         }

@@ -12,6 +12,9 @@ namespace GerenciadorProjetos.Profile.Planejamento
         public AtividadeProfile()
         {
             CreateMap<Atividade, AtividadeDTO>()
+                .ForMember(dest => 
+                    dest.Projeto, 
+                    opt => opt.MapFrom(src => src.Projeto.Descricao))
             .ReverseMap()
                 .ForMember(dest =>
                         dest.Projeto,

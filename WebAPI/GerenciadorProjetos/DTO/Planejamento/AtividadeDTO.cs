@@ -15,7 +15,7 @@ namespace GerenciadorProjetos.Dto.Planejamento
         public double EsforcoReal { get; set; }
 
         public int ProjetoID { get; set; }
-        public ProjetoDTO Projeto { get; set; }
+        public string Projeto { get; set; }
 
         public ICollection<TarefaDTO> Tarefas { get; set; }
 
