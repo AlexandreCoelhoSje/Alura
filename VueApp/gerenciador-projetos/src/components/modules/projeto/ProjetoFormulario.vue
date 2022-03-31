@@ -1,6 +1,6 @@
 <script>
+import ProjetoDetalhe from '@/domain/projeto/ProjetoDetalhe'
 import ProjetoService from '@/domain/projeto/ProjetoService'
-import Projeto from '@/domain/projeto/Projeto'
 import PaginaFormularioPadraoVue from "@/components/shared/layout/paginaFormularioPadrao.vue";
 
 export default {
@@ -11,7 +11,7 @@ export default {
         return {
             tituloPagina: "Projetos",
             modoNovo: this.$route.params.id ? false : true,
-            projeto: new Projeto()
+            projeto: new ProjetoDetalhe()
         };
     },
     created() {
@@ -19,10 +19,8 @@ export default {
         this.service = new ProjetoService(this);
 
         //Detalha Projeto
-        if (!this.modoNovo) {
-
+        if (!this.modoNovo)
             this.detalhar();
-        }
     },
     methods: {
         alterar() {
@@ -32,8 +30,7 @@ export default {
             this.service
                 .altera(this.projeto)
                 .done(function (retorno) {
-
-                    //vueInstance.projetos = projetos;                    
+                  
                     console.log("ProjetoFormulario.alterar sucesso ", retorno);
                     vueInstance.$router.push({ name: 'Projeto' });
                 })
@@ -48,10 +45,10 @@ export default {
 
             this.service
                 .detalha(this.$route.params.id)
-                .done(function (projetos) {
+                .done(function (projeto) {
 
-                    console.log('ProjetoFormulario.detalhar', projetos);
-                    vueInstance.projeto.projetoDTO(projetos);
+                    console.log('ProjetoFormulario.detalhar', projeto);
+                    vueInstance.projeto.mapear(projeto);
                 })
                 .fail(function (jqXHR, textStatus) {
 
@@ -65,9 +62,9 @@ export default {
 
             this.service
                 .cadastra(this.projeto)
-                .done(function (projetos) {
+                .done(function (projeto) {
 
-                    console.log("ProjetoFormulario.cadastrar sucesso ", projetos);
+                    console.log("ProjetoFormulario.cadastrar sucesso ", projeto);
                     vueInstance.$router.push({ name: 'Projeto' });
                 })
                 .fail(function (jqXHR, textStatus) {

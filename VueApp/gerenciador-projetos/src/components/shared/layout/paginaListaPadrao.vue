@@ -20,7 +20,7 @@ export default {
 
     <!-- Filtros -->
     <div class="row">
-        <div class="col-10">
+        <div class="col-12">
             <slot name="filtro"></slot>
         </div>
     </div>

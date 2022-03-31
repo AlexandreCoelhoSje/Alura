@@ -1,5 +1,5 @@
 <script>
-import Projeto from "../../../domain/projeto/Projeto";
+import ProjetoConsulta from "../../../domain/projeto/ProjetoConsulta";
 import ProjetoService from "@/domain/projeto/ProjetoService";
 
 import PaginaListaPadraoVue from "@/components/shared/layout/paginaListaPadrao.vue";
@@ -56,18 +56,23 @@ export default {
                     type: Object
                 },
                 {
+                    nome: 'Total',
+                    chave: 'totalAtividades',
+                    type: ''
+                },
+                {
                     nome: 'A Fazer',
-                    chave: '',
+                    chave: 'atividadesAFazer',
                     type: ''
                 },
                 {
                     nome: 'Fazendo',
-                    chave: '',
+                    chave: 'atividadesFazendo',
                     type: ''
                 },
                 {
                     nome: 'Feitas',
-                    chave: '',
+                    chave: 'atividadesFeitas',
                     type: ''
                 }
             ],

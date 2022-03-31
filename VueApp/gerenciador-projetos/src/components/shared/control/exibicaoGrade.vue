@@ -5,6 +5,13 @@ export default {
             type: String,
             required: true
         },
+        paramExtra: {
+            type: Object,
+            required: false,
+            default(props) {
+                return props.paramExtra ? props.paramExtra : {}
+            }
+        },
         colunas: {
             type: Array,
             required: true,
@@ -138,18 +145,18 @@ export default {
                 <td v-if="habilitarEditar">
                     <router-link
                         class="btn btn-link"
-                        :to="{ name: nomeRotaEditar, params: { id: item[identificador] } }"
+                        :to="{ name: nomeRotaEditar, params: () => { paramExtra.id = item[identificador] } }"
                     >Editar</router-link>
                 </td>
                 <td v-if="habilitarExcluir">
                     <a
-                        @click="() => { $emit('excluirRegistro', item[identificador], item[this.colunaNomeRegistro]); }"
+                        @click="() => { $emit('excluirRegistro', item[identificador], item[this.colunaNomeRegistro], paramExtra); }"
                         class="btn btn-link"
                     >Excluir</a>
                 </td>
                 <td v-if="habilitarSelecao">
                     <a
-                        @click="() => { $emit('selecionarRegistro', item[identificador]); }"
+                        @click="() => { $emit('selecionarRegistro', item[identificador], paramExtra); }"
                         class="btn btn-link"
                     >Selecionar</a>
                 </td>

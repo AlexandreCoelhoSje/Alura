@@ -8,7 +8,8 @@ export default class Tarefa {
         this.atividadeID = atividadeID;
     }
 
-    entidadeDTO(tarefa = { tarefaID: 0, descricao: '', ordem: '', atividadeID: 0 }) {
+    mapear(tarefa = { tarefaID: 0, descricao: '', ordem: '', atividadeID: 0 }) {
+
         this.tarefaID = tarefa.tarefaID;
         this.descricao = tarefa.descricao;
         this.ordem = tarefa.ordem;

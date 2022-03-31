@@ -1,5 +1,5 @@
 <script>
-import Atividade from "./../../../domain/atividade/Atividade";
+import AtividadeConsulta from "./../../../domain/atividade/AtividadeConsulta";
 import AtividadeService from "@/domain/atividade/AtividadeService.js";
 
 import ProjetoSelecaoVue from '@/components/modules/projeto/Projeto.vue'
@@ -26,29 +26,38 @@ export default {
                 monstrarModalExclusao: false
             },
             modo: this.$constModo.selecao(),
-            idProjetoSelecionado: null
+            idProjetoSelecionado: this.$route.params.extra ? this.$route.params.extra.projetoID : null,
+            filtros: {
+                id: this.idProjetoSelecionado,
+                asc: true,
+                ordenacao: '',
+                descricao: ''
+            }
         };
     },
     created() {
 
         this.service = new AtividadeService(this);
-        this.consultar();
+
+        if (this.idProjetoSelecionado)
+            this.consultar();
     },
     methods: {
         consultar() {
 
             var vueInstance = this;
-
-            let atividade = new Atividade();
-            atividade.projetoID = this.idProjetoSelecionado;
+            this.filtros.id = this.idProjetoSelecionado;
 
             this.service
-                .lista(atividade)
+                .lista(this.filtros)
                 .done(function (listaRetornada) {
+
                     vueInstance.lista = listaRetornada;
+                    vueInstance.modo = vueInstance.$constModo.consulta();
                     console.log("Atividade.consultar sucesso ", listaRetornada);
                 })
                 .fail(function (jqXHR, textStatus) {
+
                     console.log("Atividade.consultar erro " + textStatus);
                 });
         },
@@ -88,6 +97,10 @@ export default {
 
             this.idProjetoSelecionado = idProjeto;
             this.consultar();
+        },
+        trocarProjeto() {
+
+            this.modo = this.$constModo.selecao();
         }
     }
 }
@@ -106,7 +119,7 @@ export default {
         :tituloPrincipal="this.tituloPagina"
     >
         <template v-slot:filtro>
-            <form>
+            <form @submit.prevent="consultar()">
                 <div class="row mb-3">
                     <label
                         for="inputDescricao"
@@ -118,11 +131,20 @@ export default {
                             class="form-control form-control-sm"
                             id="inputDescricao"
                             placeholder="digite parte da descrição"
+                            v-model="filtros.descricao"
                         />
                     </div>
-                    <div class="col-sm-2 col-md-2">
+                    <div class="col-sm-2 col-md-8">
                         <button type="submit" class="btn btn-primary">Filtrar</button>
-                        <router-link class="btn btn-primary ms-1" to="/projeto/novo">Novo</router-link>
+                        <router-link
+                            class="btn btn-primary ms-1"
+                            :to="{ name: 'AtividadeNovo', params: { extra: '{ projetoID: 1 }' } }"
+                        >Novo</router-link>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary float-end"
+                            v-on:click="trocarProjeto"
+                        >Selecionar outro Projeto</button>
                     </div>
                 </div>
             </form>
@@ -130,12 +152,17 @@ export default {
 
         <template v-slot:lista>
             <ExibicaoGrade
-                identificador="projetoID"
+                identificador="atividadeID"
                 :colunas="[
                     {
-                        nome: '',
-                        chave: '',
-                        type: ''
+                        nome: 'Código',
+                        chave: 'codigoIdentificador',
+                        type: String
+                    },
+                    {
+                        nome: 'Ordenação',
+                        chave: 'numeroOrdenacao',
+                        type: String
                     },
                     {
                         nome: 'Descrição',
@@ -143,37 +170,23 @@ export default {
                         type: String
                     },
                     {
-                        nome: 'Data Inicio',
-                        chave: 'dataInicial',
-                        type: Date
+                        nome: 'Esforço Estimado',
+                        chave: 'esforcoEstimado',
+                        type: String
                     },
                     {
-                        nome: 'Situação',
-                        chave: 'situacaoProjeto.descricao',
-                        type: Object
-                    },
-                    {
-                        nome: 'A Fazer',
-                        chave: '',
-                        type: ''
-                    },
-                    {
-                        nome: 'Fazendo',
-                        chave: '',
-                        type: ''
-                    },
-                    {
-                        nome: 'Feitas',
-                        chave: '',
-                        type: ''
+                        nome: 'Esforço Real',
+                        chave: 'esforcoReal',
+                        type: String
                     }
                 ]"
-                :lista="projetos"
+                :lista="lista"
                 :habilitarEditar="true"
                 :habilitarExcluir="true"
                 nomeRotaEditar="ProjetoEditar"
                 colunaNomeRegistro="descricao"
                 @excluir-registro="excluirSelecionar"
+                :paramExtra="{ projetoID: this.idProjetoSelecionado }"
             />
         </template>
     </PaginaListaPadrao>
