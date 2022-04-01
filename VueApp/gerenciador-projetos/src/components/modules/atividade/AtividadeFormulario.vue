@@ -8,9 +8,13 @@ export default {
         PaginaFormularioPadrao: PaginaFormularioPadraoVue
     },
     props:  {
+        projetoID: {
+            type: Int32Array,
+            required: false
+        },
         extra: {
-            type: Object,
-            required: true
+            type: String,
+            required: false
         }
     },
     data() {
@@ -18,15 +22,20 @@ export default {
             tituloPagina: "Atividades",
             modoNovo: this.$route.params.id ? false : true,
             atividade: new AtividadeDetalhe(),
-            idProjetoSelecionado: null //JSON.parse(this.extra).projetoID
+            idProjetoSelecionado: null
         };
     },
     created() {
-        
+
+console.log('this.projetoID');
+console.log(this.projetoID);
 console.log('this.extra');
 console.log(this.extra);
-console.log(JSON.parse(this.extra));
-alert(this.idProjetoSelecionado);
+
+        if (this.projetoID)
+            this.idProjetoSelecionado = this.projetoID;
+        else if (this.extra)
+            this.idProjetoSelecionado = this.extra.split(':')[1];
 
         this.service = new AtividadeService(this);
 
@@ -44,7 +53,7 @@ alert(this.idProjetoSelecionado);
                 .done(function (retorno) {
                   
                     console.log("AtividadeFormulario.alterar sucesso ", retorno);
-                    vueInstance.$router.push({ name: 'Atividade' });
+                    vueInstance.$router.push({ name: 'Atividade', params: { projetoID: vueInstance.idProjetoSelecionado } });
                 })
                 .fail(function (jqXHR, textStatus) {
 
@@ -71,13 +80,15 @@ alert(this.idProjetoSelecionado);
         cadastrar() {
 
             var vueInstance = this;
+            this.atividade.projetoID = this.idProjetoSelecionado;
+            console.log('atividade incluir: ', this.atividade);
 
             this.service
                 .cadastra(this.atividade)
                 .done(function (atividade) {
 
                     console.log("AtividadeFormulario.cadastrar sucesso ", atividade);
-                    vueInstance.$router.push({ name: 'Atividade' });
+                    vueInstance.$router.push({ name: 'Atividade', params: { projetoID: vueInstance.idProjetoSelecionado } });
                 })
                 .fail(function (jqXHR, textStatus) {
 
@@ -93,6 +104,7 @@ alert(this.idProjetoSelecionado);
         <template v-slot:formulario>
             <form>
                 <input type="hidden" v-model="atividade.atividadeID" id="atividadeID" />
+                <input type="hidden" v-model="atividade.projetoID" id="atividadeID" />
 
                 <div class="row mb-3">
                     <label for="inputDescricao" class="col-sm-2 col-form-label">Código Identificador</label>
@@ -107,25 +119,13 @@ alert(this.idProjetoSelecionado);
                 </div>
 
                 <div class="row mb-3">
-                    <label for="inputResumo" class="col-sm-2 col-form-label">Resumo</label>
+                    <label for="inputDescricao" class="col-sm-2 col-form-label">Descrição</label>
                     <div class="col-sm-10">
                         <input
                             type="text"
-                            v-model="atividade.resumo"
+                            v-model="atividade.descricao"
                             class="form-control form-control-sm"
-                            id="inputResumo"
-                        />
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <label for="inputResumo" class="col-sm-2 col-form-label">Resumo</label>
-                    <div class="col-sm-10">
-                        <input
-                            type="text"
-                            v-model="atividade.resumo"
-                            class="form-control form-control-sm"
-                            id="inputResumo"
+                            id="inputDescricao"
                         />
                     </div>
                 </div>
@@ -146,7 +146,7 @@ alert(this.idProjetoSelecionado);
                     <label for="inputNumeroOrdenacao" class="col-sm-2 col-form-label">Numero Ordenação</label>
                     <div class="col-sm-10">
                         <input
-                            type="text"
+                            type="number"
                             v-model="atividade.numeroOrdenacao"
                             class="form-control form-control-sm"
                             id="inputNumeroOrdenacao"
@@ -211,7 +211,7 @@ alert(this.idProjetoSelecionado);
                 <div class="d-grid gap-2 d-flex justify-content-center">
                     <button
                         v-if="this.modoNovo"
-                        v-on:click="this.cadastrar()"
+                        v-on:click="cadastrar()"
                         type="button"
                         class="btn btn-primary"
                     >Incluir</button>
@@ -221,7 +221,7 @@ alert(this.idProjetoSelecionado);
                         type="button"
                         class="btn btn-primary"
                     >Alterar</button>
-                    <router-link class="btn btn-secondary" :to="{ name: 'Atividade', params: { extra: { projetoID: idProjetoSelecionado } } }">Voltar</router-link>
+                    <router-link class="btn btn-secondary" :to="{ name: 'Atividade', params: { projetoID: idProjetoSelecionado } }">Voltar</router-link>
                 </div>
             </form>
         </template>

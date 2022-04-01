@@ -15,7 +15,7 @@ const routes = [
     { path: '/projeto/editar/:id', name: 'ProjetoEditar', component: ProjetoFormulario },
     { path: '/atividade', name: 'Atividade', component: Atividade },
     { path: '/atividade/novo', name: 'AtividadeNovo', component: AtividadeFormulario, props: (route) => ({...route.params }) },
-    { path: '/atividade/editar/:id', name: 'ProjetoEditar', component: AtividadeFormulario }
+    { path: '/atividade/editar/:id', name: 'AtividadeEditar', component: AtividadeFormulario, props: (route) => ({...route.params }) }
 ];
 
 const router = createRouter({
