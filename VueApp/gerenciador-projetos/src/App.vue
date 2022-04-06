@@ -20,7 +20,7 @@ export default {
     <div id="app">
         <header class="fixed-top">
             <nav class="navbar navbar-dark bg-dark">
-                <div class="container-fluid justify-content-beetween">
+                <div class="container-fluid flex-nowrap justify-content-beetween">
                     <router-link class="navbar-brand" to="/">D&S</router-link>
 
                     <button

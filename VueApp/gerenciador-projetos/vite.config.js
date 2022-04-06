@@ -10,6 +10,11 @@ export default defineConfig({
                 target: "https://localhost",
                 changeOrigin: true,
                 secure: false
+            },
+            "/planejamento/api": {
+                target: "http://localhost",
+                changeOrigin: true,
+                secure: false
             }
         }
     },
