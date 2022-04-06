@@ -6,11 +6,11 @@ export default {
             required: true
         },
         paramExtra: {
-            type: Object,
-            required: false,
-            default(props) {
-                return props.paramExtra ? props.paramExtra : {}
-            }
+            type: String,
+            required: false
+            // default(props) {
+            //     return props.paramExtra ? props.paramExtra : {}
+            // }
         },
         colunas: {
             type: Array,
@@ -145,7 +145,7 @@ export default {
                 <td v-if="habilitarEditar">
                     <router-link
                         class="btn btn-link"
-                        :to="{ name: nomeRotaEditar, params: () => { paramExtra.id = item[identificador] } }"
+                        :to="{ name: nomeRotaEditar, params: { id: item[identificador], extra: paramExtra } }"
                     >Editar</router-link>
                 </td>
                 <td v-if="habilitarExcluir">

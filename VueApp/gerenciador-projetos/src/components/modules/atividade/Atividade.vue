@@ -26,7 +26,7 @@ export default {
                 monstrarModalExclusao: false
             },
             modo: this.$constModo.selecao(),
-            idProjetoSelecionado: this.$route.params.extra ? this.$route.params.extra.projetoID : null,
+            idProjetoSelecionado: this.$route.params.projetoID ? this.$route.params.projetoID : null,
             filtros: {
                 id: this.idProjetoSelecionado,
                 asc: true,
@@ -47,6 +47,7 @@ export default {
 
             var vueInstance = this;
             this.filtros.id = this.idProjetoSelecionado;
+            //this.filtros.ordenacao = 'numeroOrdenacao';
 
             this.service
                 .lista(this.filtros)
@@ -138,7 +139,7 @@ export default {
                         <button type="submit" class="btn btn-primary">Filtrar</button>
                         <router-link
                             class="btn btn-primary ms-1"
-                            :to="{ name: 'AtividadeNovo', params: { extra: '{ projetoID: 1 }' } }"
+                            :to="{ name: 'AtividadeNovo', params: { projetoID: idProjetoSelecionado } }"
                         >Novo</router-link>
                         <button
                             type="button"
@@ -183,10 +184,10 @@ export default {
                 :lista="lista"
                 :habilitarEditar="true"
                 :habilitarExcluir="true"
-                nomeRotaEditar="ProjetoEditar"
+                nomeRotaEditar="AtividadeEditar"
                 colunaNomeRegistro="descricao"
                 @excluir-registro="excluirSelecionar"
-                :paramExtra="{ projetoID: this.idProjetoSelecionado }"
+                :paramExtra=" 'projetoID: ' + this.idProjetoSelecionado "
             />
         </template>
     </PaginaListaPadrao>

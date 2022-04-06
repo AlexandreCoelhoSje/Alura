@@ -152,7 +152,7 @@ export default {
                     </div>
                     <div class="col-sm-2 col-md-2">
                         <button type="submit" class="btn btn-primary">Filtrar</button>
-                        <router-link class="btn btn-primary ms-1" to="/projeto/novo">Novo</router-link>
+                        <router-link v-if="modo == this.$constModo.cadastro()" class="btn btn-primary ms-1" to="/projeto/novo">Novo</router-link>
                     </div>
                 </div>
             </form>
