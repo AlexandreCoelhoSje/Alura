@@ -7,12 +7,12 @@ export default {
     components: {
         PaginaFormularioPadrao: PaginaFormularioPadraoVue
     },
-    props:  {
+    props: {
         projetoID: {
             type: Int32Array,
             required: false
         },
-        extra: {
+        paramExtra: {
             type: String,
             required: false
         }
@@ -21,21 +21,18 @@ export default {
         return {
             tituloPagina: "Atividades",
             modoNovo: this.$route.params.id ? false : true,
-            atividade: new AtividadeDetalhe(),
-            idProjetoSelecionado: null
+            atividade: new AtividadeDetalhe()
         };
     },
+    computed: {
+        idProjetoSelecionado() {
+            if (this.projetoID)
+                return this.projetoID;
+            else if (this.paramExtra)
+                return JSON.parse(this.$route.params.paramExtra).projetoID;
+        }
+    },
     created() {
-
-console.log('this.projetoID');
-console.log(this.projetoID);
-console.log('this.extra');
-console.log(this.extra);
-
-        if (this.projetoID)
-            this.idProjetoSelecionado = this.projetoID;
-        else if (this.extra)
-            this.idProjetoSelecionado = this.extra.split(':')[1];
 
         this.service = new AtividadeService(this);
 
@@ -51,7 +48,7 @@ console.log(this.extra);
             this.service
                 .altera(this.atividade)
                 .done(function (retorno) {
-                  
+
                     console.log("AtividadeFormulario.alterar sucesso ", retorno);
                     vueInstance.$router.push({ name: 'Atividade', params: { projetoID: vueInstance.idProjetoSelecionado } });
                 })
@@ -102,6 +99,7 @@ console.log(this.extra);
 <template>
     <PaginaFormularioPadrao :tituloPrincipal="tituloPagina">
         <template v-slot:formulario>
+            {{ 'idProjetoSelecionado:' + idProjetoSelecionado }}
             <form>
                 <input type="hidden" v-model="atividade.atividadeID" id="atividadeID" />
                 <input type="hidden" v-model="atividade.projetoID" id="atividadeID" />
@@ -143,7 +141,10 @@ console.log(this.extra);
                 </div>
 
                 <div class="row mb-3">
-                    <label for="inputNumeroOrdenacao" class="col-sm-2 col-form-label">Numero Ordenação</label>
+                    <label
+                        for="inputNumeroOrdenacao"
+                        class="col-sm-2 col-form-label"
+                    >Numero Ordenação</label>
                     <div class="col-sm-10">
                         <input
                             type="number"
@@ -153,7 +154,7 @@ console.log(this.extra);
                         />
                     </div>
                 </div>
-                
+
                 <div class="row mb-3">
                     <label for="inputValoresEsforco" class="col-sm-2 col-form-label">Valores Esforco</label>
                     <div class="col-sm-10">
@@ -167,7 +168,10 @@ console.log(this.extra);
                 </div>
 
                 <div class="row mb-3">
-                    <label for="inputEsforcoEstimado" class="col-sm-2 col-form-label">Esforço Estimado</label>
+                    <label
+                        for="inputEsforcoEstimado"
+                        class="col-sm-2 col-form-label"
+                    >Esforço Estimado</label>
                     <div class="col-sm-10">
                         <input
                             type="text"
@@ -206,7 +210,7 @@ console.log(this.extra);
                             <option :value="3">Finalizado</option>
                         </select>
                     </div>
-                </div> -->
+                </div>-->
 
                 <div class="d-grid gap-2 d-flex justify-content-center">
                     <button
@@ -221,7 +225,10 @@ console.log(this.extra);
                         type="button"
                         class="btn btn-primary"
                     >Alterar</button>
-                    <router-link class="btn btn-secondary" :to="{ name: 'Atividade', params: { projetoID: idProjetoSelecionado } }">Voltar</router-link>
+                    <router-link
+                        class="btn btn-secondary"
+                        :to="{ name: 'Atividade', params: { projetoID: idProjetoSelecionado } }"
+                    >Voltar</router-link>
                 </div>
             </form>
         </template>

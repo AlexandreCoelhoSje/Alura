@@ -140,9 +140,9 @@ export default {
                 <div class="row mb-3">
                     <label
                         for="inputDescricao"
-                        class="col-sm-2 col-md-1 col-form-label col-form-label-sm"
+                        class="col-sm-2 col-md-2 col-form-label col-form-label-sm"
                     >Descrição</label>
-                    <div class="col-sm-8 col-md-3">
+                    <div class="col-sm-8 col-md-4 col-lg-2">
                         <input
                             type="text"
                             class="form-control form-control-sm"
@@ -150,7 +150,7 @@ export default {
                             placeholder="digite parte da descrição"
                         />
                     </div>
-                    <div class="col-sm-2 col-md-2">
+                    <div class="col-sm-2 col-md-4 col-lg-2">
                         <button type="submit" class="btn btn-primary">Filtrar</button>
                         <router-link v-if="modo == this.$constModo.cadastro()" class="btn btn-primary ms-1" to="/projeto/novo">Novo</router-link>
                     </div>

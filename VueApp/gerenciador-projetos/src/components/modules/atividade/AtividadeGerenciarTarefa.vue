@@ -36,76 +36,10 @@ export default {
         };
     },
     created() {
-
-        this.service = new AtividadeService(this);
-
-        if (this.idProjetoSelecionado)
-            this.consultar();
+      
     },
     methods: {
-        consultar() {
-
-            var vueInstance = this;
-            this.filtros.id = this.idProjetoSelecionado;
-            //this.filtros.ordenacao = 'numeroOrdenacao';
-
-            this.service
-                .lista(this.filtros)
-                .done(function (listaRetornada) {
-
-                    vueInstance.lista = listaRetornada;
-                    vueInstance.modo = vueInstance.$constModo.consulta();
-                    console.log("Atividade.consultar sucesso ", listaRetornada);
-                })
-                .fail(function (jqXHR, textStatus) {
-
-                    console.log("Atividade.consultar erro " + textStatus);
-                });
-        },
-        excluirSelecionar(id, nome) {
-
-            this.entidadeAlvo.monstrarModalExclusao = true;
-            this.entidadeAlvo.nome = nome;
-            this.entidadeAlvo.id = id;
-        },
-        excluirCancelar() {
-
-            this.entidadeAlvo.monstrarModalExclusao = false
-            this.entidadeAlvo.nome = '';
-            this.entidadeAlvo.id = null;
-        },
-        excluirConfirmar(value) {
-
-            var vueInstance = this;
-
-            this.service
-                .apaga(this.entidadeAlvo.id)
-                .done(function (atividade) {
-
-                    console.log('Atividade.excluir', atividade);
-                    vueInstance.entidadeAlvo.monstrarModalExclusao = false;
-                    vueInstance.entidadeAlvo.nome = '';
-                    vueInstance.entidadeAlvo.id = null;
-                    vueInstance.consultar();
-                })
-                .fail(function (jqXHR, textStatus) {
-
-                    console.log("Atividade.excluir erro " + textStatus);
-                    alert('Erro ao Excluir Atividade id:' + vueInstance.$route.params.id);
-                });
-        },
-        selecionarProjeto(idProjeto) {
-
-            this.idProjetoSelecionado = idProjeto;
-            this.consultar();
-        },
-        trocarProjeto() {
-
-            this.modo = this.$constModo.selecao();
-        },
-        selecionarAtividade() {
-            this.$router.push({ name: 'Atividade', params: { projetoID: vueInstance.idProjetoSelecionado } });
-        }
+        
     }
 }
 </script>

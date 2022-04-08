@@ -8,9 +8,6 @@ export default {
         paramExtra: {
             type: String,
             required: false
-            // default(props) {
-            //     return props.paramExtra ? props.paramExtra : {}
-            // }
         },
         colunas: {
             type: Array,
@@ -74,10 +71,10 @@ export default {
             required: false,
             default: false
         },
-        nomeRotaExcluir: {
-            type: String,
-            required: false
-        },
+        // nomeRotaExcluir: {
+        //     type: String,
+        //     required: false
+        // },
         habilitarSelecao: {
             type: Boolean,
             required: false,
@@ -145,7 +142,7 @@ export default {
                 <td v-if="habilitarEditar">
                     <router-link
                         class="btn btn-link"
-                        :to="{ name: nomeRotaEditar, params: { id: item[identificador], extra: paramExtra } }"
+                        :to="{ name: nomeRotaEditar, params: { id: item[identificador], paramExtra: paramExtra } }"
                     >Editar</router-link>
                 </td>
                 <td v-if="habilitarExcluir">
