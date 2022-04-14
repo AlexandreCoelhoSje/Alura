@@ -1,6 +1,7 @@
 const constHttp = {
 
-    urlApi: () => '/planejamento/api' //'/projeto/api'
+    urlApi: () => '/projeto/api'
+        //urlApi: () => '/planejamento/api'
 }
 
 export default constHttp;

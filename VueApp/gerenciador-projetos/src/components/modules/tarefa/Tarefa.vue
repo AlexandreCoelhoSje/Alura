@@ -1,4 +1,6 @@
 <script>
+import { Modal } from 'bootstrap';
+
 import Tarefa from "../../../domain/tarefa/Tarefa";
 import TarefaService from "@/domain/tarefa/TarefaService";
 
@@ -6,22 +8,33 @@ import PaginaListaPadraoVue from "@/components/shared/layout/paginaListaPadrao.v
 import ExibicaoGradeVue from "@/components/shared/control/exibicaoGrade.vue";
 import ModalConfirmacaoVue from '@/components/shared/control/modalConfirmacao.vue';
 
+
 export default {
     components: {
         PaginaListaPadrao: PaginaListaPadraoVue,
         ExibicaoGrade: ExibicaoGradeVue,
         ModalConfirmacao: ModalConfirmacaoVue
     },
+    props: {
+        atividadeID: {
+            type: String,
+            required: false
+        }
+    },
     data() {
         return {
             filtros: {
-                id: this.idAtividadeSelecionada,
+                id: null,
                 asc: true,
                 ordenacao: '',
                 descricao: ''
             },
-            idAtividadeSelecionada: this.$route.params.atividadeID ? this.$route.params.atividadeID : null,
-            lista: []
+            idAtividadeSelecionada: this.atividadeID,
+            lista: [],
+            idModalFormulario: 'modalFormulario',
+            modalFormulario: null,
+            idModalExcluir: 'modalExcluir',
+            modalExcluir: null
         };
     },
     created() {
@@ -30,6 +43,19 @@ export default {
         this.consultar();
     },
     methods: {
+        cancelarModal(modal) {
+            
+            modal.hide();
+        },
+        novo() {
+
+            this.modalFormulario = new Modal(document.getElementById(this.idModalFormulario), { backdrop: 'static'});
+            this.modalFormulario.show();
+        },
+        gravar() {
+
+            this.modalFormulario.hide();
+        },
         consultar() {
             var vueInstance = this;
             this.filtros.id = this.idAtividadeSelecionada;
@@ -45,55 +71,59 @@ export default {
 
                     console.log("Tarefa.consultar erro " + textStatus);
                 });
-        }
-    },
+        }        
+    }
 }
 </script>
 
 <template>
 
-    <PaginaListaPadrao :tituloPrincipal="this.tituloPagina">
+    <div class="border-top border-bottom mb-1 border-2 border-dark bg-light" style="height: 60vh;">
+        <table class="table mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Descrição</th>
+                    <th class="text-end">
+                        <button type="button" class="btn btn-outline-secondary ml-auto rounded-0" v-on:click="novo">Adicionar</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in lista" :key="item.tarefaID">
+                    <th scope="row">1</th>
+                    <td>{{ item.descricao }}</td>
+                    <td></td>
+                </tr>               
+            </tbody>
+        </table>
+    </div>
 
-        <template v-slot:filtro>
-
-            <form @submit.prevent="consultar()">
-                <div class="row mb-3">
-                    <label for="inputDescricao"
-                        class="col-sm-2 col-md-2 col-form-label col-form-label-sm">Descrição</label>
-                    <div class="col-sm-8 col-md-4">
-                        <input type="text" class="form-control form-control-sm" id="inputDescricao"
-                            placeholder="digite parte da descrição" v-model="filtros.descricao" />
-                    </div>
-                    <div class="col-sm-2 col-md-6">
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
-                        <router-link class="btn btn-primary ms-1"
-                            :to="{ name: 'TarefaNovo', params: { atividadeID: idAtividadeSelecionada } }">Novo
-                        </router-link>
-                    </div>
+    <!-- Modal -->
+    <div :id="idModalFormulario" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tarefa - nova</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        v-on:click="cancelarModal(this.idModalFormulario);"
+                    ></button>
                 </div>
-            </form>
-        </template>
+                <div class="modal-body">{{ textoCorpo }}</div>
+                <div class="modal-footer">
+                    <button @click="$emit('modalCancelar', parametroEvento);" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button
+                        type="button"
+                        :class="'btn ' + classeContextoBotaoConfirmar"
+                        @click="$emit('modalConfirmar', parametroEvento);"
+                    >{{ textoBotaoConfirmar }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <template v-slot:lista>
-            <ExibicaoGrade identificador="tarefaID" :colunas="[
-                {
-                    nome: 'Ordem',
-                    chave: 'ordem',
-                    type: String
-                },
-                {
-                    nome: 'Descrição',
-                    chave: 'descricao',
-                    type: String
-                }
-            ]" :lista="lista" colunaNomeRegistro="descricao" :habilitarEditar="true" nomeRotaEditar="TarefaEditar"
-                :habilitarExcluir="true" @excluir-registro="excluirSelecionar" />
-        </template>
-    </PaginaListaPadrao>
-
-    <ModalConfirmacao textoTitulo="Confirmar Exclusão!"
-        :textoCorpo="'Tem certeza que deseja excluir o registro ' + this.entidadeAlvo.nomeProjeto + '?'"
-        textoBotaoLancar="Excluir" textoBotaoConfirmar="Excluir" classeContextoBotaoConfirmar="btn-danger"
-        :exibirModal="this.entidadeAlvo.monstrarModalExclusao" @modal-Confirmar="excluirConfirmar"
-        @modal-cancelar="excluirCancelar" />
 </template>
