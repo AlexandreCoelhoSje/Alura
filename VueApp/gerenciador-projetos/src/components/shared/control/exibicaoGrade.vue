@@ -79,6 +79,11 @@ export default {
             type: Boolean,
             required: false,
             default: false
+        },
+        textoOpcaoSelecao: {
+            type: String,
+            required: false,
+            default: 'Selecionar'
         }
     },
     emits: ['selecionarRegistro', 'excluirRegistro'],
@@ -155,7 +160,7 @@ export default {
                     <a
                         @click="() => { $emit('selecionarRegistro', item[identificador], paramExtra); }"
                         class="btn btn-link"
-                    >Selecionar</a>
+                    >{{ textoOpcaoSelecao }}</a>
                 </td>
             </tr>
         </tbody>

@@ -103,8 +103,8 @@ export default {
 
             this.modo = this.$constModo.selecao();
         },
-        selecionarAtividade() {
-            this.$router.push({ name: 'Atividade', params: { projetoID: vueInstance.idProjetoSelecionado } });
+        selecionarAtividade(atividadeID) {
+            this.$router.push({ name: 'AtividadeTarefa', params: { id: atividadeID } });
         }
     }
 }
@@ -192,6 +192,7 @@ export default {
                 :habilitarExcluir="true"
                 @excluir-registro="excluirSelecionar"
                 :habilitarSelecao="true"
+                textoOpcaoSelecao="Gerenciar"
                 @selecionar-registro="selecionarAtividade"
                 :paramExtra="JSON.stringify({ projetoID: this.idProjetoSelecionado })"
             />
