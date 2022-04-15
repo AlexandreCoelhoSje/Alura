@@ -2,7 +2,7 @@
 import AtividadeDetalhe from '@/domain/atividade/AtividadeDetalhe'
 import AtividadeService from '@/domain/atividade/AtividadeService'
 
-import TarefaVue from '@/domain/atividade/Tarefa.vue'
+import TarefaVue from '@/components/modules/tarefa/Tarefa.vue'
 import PaginaFormularioPadraoVue from "@/components/shared/layout/paginaFormularioPadrao.vue";
 
 export default {
