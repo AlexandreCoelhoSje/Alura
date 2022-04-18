@@ -104,7 +104,9 @@ export default {
             this.modo = this.$constModo.selecao();
         },
         selecionarAtividade(atividadeID) {
-            this.$router.push({ name: 'AtividadeTarefa', params: { id: atividadeID } });
+
+            let projetoID = this.idProjetoSelecionado;
+            this.$router.push({ name: 'AtividadeTarefa', params: { id: atividadeID, atividadeID: atividadeID, projetoID: projetoID } });
         }
     }
 }
@@ -123,7 +125,6 @@ export default {
         :tituloPrincipal="this.tituloPagina"
     >
         <template v-slot:filtro>
-        {{ 'idProjetoSelecionado:' + idProjetoSelecionado }}
             <form @submit.prevent="consultar()">
                 <div class="row mb-3">
                     <label
@@ -194,7 +195,6 @@ export default {
                 :habilitarSelecao="true"
                 textoOpcaoSelecao="Gerenciar"
                 @selecionar-registro="selecionarAtividade"
-                :paramExtra="JSON.stringify({ projetoID: this.idProjetoSelecionado })"
             />
         </template>
     </PaginaListaPadrao>

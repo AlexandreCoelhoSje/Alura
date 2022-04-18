@@ -99,7 +99,6 @@ export default {
 <template>
     <PaginaFormularioPadrao :tituloPrincipal="tituloPagina">
         <template v-slot:formulario>
-            {{ 'idProjetoSelecionado:' + idProjetoSelecionado }}
             <form>
                 <input type="hidden" v-model="atividade.atividadeID" id="atividadeID" />
                 <input type="hidden" v-model="atividade.projetoID" id="atividadeID" />

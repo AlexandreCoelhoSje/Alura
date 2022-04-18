@@ -15,6 +15,10 @@ export default {
             type: Int32Array,
             required: false
         },
+        projetoID: {
+            type: Int32Array,
+            required: false
+        },
         paramExtra: {
             type: String,
             required: false
@@ -59,7 +63,7 @@ export default {
         <template v-slot:formulario>
             <form>
                 <input type="hidden" v-model="atividade.atividadeID" id="atividadeID" />
-                <input type="hidden" v-model="atividade.projetoID" id="atividadeID" />
+                <input type="hidden" v-model="atividade.projetoID" id="projetoID" />
 
                 <div class="row mb-3">
                     <div class="col-sm-1">
@@ -84,11 +88,11 @@ export default {
                     </div>
                 </div>
 
-                <Tarefa :atividadeID="atividadeID"></Tarefa>
+                <Tarefa :atividadeID="atividadeID" ></Tarefa>
 
                 <div class="d-grid gap-2 d-flex justify-content-center">
                     <router-link class="btn btn-secondary"
-                        :to="{ name: 'Atividade', params: { projetoID: idProjetoSelecionado } }">Voltar</router-link>
+                        :to="{ name: 'Atividade', params: { projetoID: this.projetoID } }">Voltar</router-link>
                 </div>
             </form>
         </template>
