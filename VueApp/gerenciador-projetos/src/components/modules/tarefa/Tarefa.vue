@@ -8,11 +8,14 @@ import PaginaListaPadraoVue from "@/components/shared/layout/paginaListaPadrao.v
 import ExibicaoGradeVue from "@/components/shared/control/exibicaoGrade.vue";
 import ModalConfirmacaoVue from "@/components/shared/control/modalConfirmacao.vue";
 
+import ExibicaoGradeV2Vue from "@/components/shared/control/exibicaoGradeV2.vue";
+
 export default {
     components: {
         PaginaListaPadrao: PaginaListaPadraoVue,
         ExibicaoGrade: ExibicaoGradeVue,
         ModalConfirmacao: ModalConfirmacaoVue,
+        ExibicaoGradeV2: ExibicaoGradeV2Vue
     },
     data() {
         return {
@@ -180,6 +183,32 @@ export default {
                 </tr>
             </tbody>
         </table>
+
+        <br><br><br>
+        <h1>Segunda</h1>
+
+        <ExibicaoGradeV2 :lista="lista">
+            <template v-slot:filtros>
+            <th scope="col">#</th>
+            <th scope="col">Descrição</th>
+            <th class="text-end">
+                <button type="button" class="btn btn-outline-secondary ml-auto rounded-0" v-on:click="novo">
+                    Adicionar
+                </button>
+            </th>
+        </template>
+
+        <template v-slot:colunas>
+            <th scope="row">{{ colunas.item.ordem }}</th>
+            <td class="w-100">{{ colunas.item.descricao }}</td>
+            <td class="text-end pe-2">
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-0"
+                    v-on:click="editar(colunas.item.tarefaID);">
+                    Edi.
+                </button>
+            </td>
+        </template>
+        </ExibicaoGradeV2>
     </div>
 
     <!-- Modal -->
