@@ -71,12 +71,12 @@ export default {
                             atividade.numeroOrdenacao
                         }}</span>
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-2">
                         <span class="form-control-plaintext" id="inputDescricao">{{
                             atividade.codigoIdentificador
                         }}</span>
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <span class="form-control-plaintext" id="inputDescricao">{{
                             atividade.descricao
                         }}</span>

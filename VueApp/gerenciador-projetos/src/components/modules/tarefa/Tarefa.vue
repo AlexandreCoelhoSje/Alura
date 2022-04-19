@@ -8,14 +8,18 @@ import PaginaListaPadraoVue from "@/components/shared/layout/paginaListaPadrao.v
 import ExibicaoGradeVue from "@/components/shared/control/exibicaoGrade.vue";
 import ModalConfirmacaoVue from "@/components/shared/control/modalConfirmacao.vue";
 
-import ExibicaoGradeV2Vue from "@/components/shared/control/exibicaoGradeV2.vue";
+import GradeVue from "@/components/shared/control/grade.vue";
+import GradeColunaVue from "@/components/shared/control/gradeColuna.vue";
+import GradeCabecalhoVue from "@/components/shared/control/gradeCabecalho.vue";
 
 export default {
     components: {
         PaginaListaPadrao: PaginaListaPadraoVue,
         ExibicaoGrade: ExibicaoGradeVue,
         ModalConfirmacao: ModalConfirmacaoVue,
-        ExibicaoGradeV2: ExibicaoGradeV2Vue
+        Grade: GradeVue,
+        Coluna: GradeColunaVue,
+        Cabecalho: GradeCabecalhoVue
     },
     data() {
         return {
@@ -40,7 +44,7 @@ export default {
         this.consultar();
     },
     mounted() {
-        
+
         this.modalFormulario = new Modal(
             document.getElementById(this.idModalFormulario),
             { backdrop: "static" }
@@ -55,7 +59,7 @@ export default {
         novo() {
 
             this.modoNovo = true;
-            this.tarefa = new Tarefa();            
+            this.tarefa = new Tarefa();
             this.modalFormulario.show();
         },
         gravar() {
@@ -72,12 +76,12 @@ export default {
                     vueInstance.modoNovo = false;
                     vueInstance.modalFormulario.hide();
                     vueInstance.consultar();
-                    console.log("tarefaFormulario.cadastrar sucesso ", tarefa);                    
+                    console.log("tarefaFormulario.cadastrar sucesso ", tarefa);
                 })
                 .fail(function (jqXHR, textStatus) {
 
                     console.log("AtividadeFormulario.cadastrar erro " + textStatus);
-                });            
+                });
         },
         editar(tarefaID) {
 
@@ -159,56 +163,28 @@ export default {
 
 <template>
     <div class="border-top border-bottom mb-1 border-2 border-dark bg-light" style="height: 60vh">
-        <table class="table mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Descrição</th>
-                    <th class="text-end">
-                        <button type="button" class="btn btn-outline-secondary ml-auto rounded-0" v-on:click="novo">
-                            Adicionar
-                        </button>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in lista" :key="item.tarefaID">
-                    <th scope="row">{{ item.ordem }}</th>
-                    <td class="w-100">{{ item.descricao }}</td>
-                    <td class="text-end pe-2">                        
-                        <button type="button" class="btn btn-sm btn-outline-primary rounded-0" v-on:click="editar(item.tarefaID);">
-                            Edi.
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <br><br><br>
-        <h1>Segunda</h1>
-
-        <ExibicaoGradeV2 :lista="lista">
+        <Grade :lista="lista">
             <template v-slot:filtros>
-            <th scope="col">#</th>
-            <th scope="col">Descrição</th>
-            <th class="text-end">
-                <button type="button" class="btn btn-outline-secondary ml-auto rounded-0" v-on:click="novo">
-                    Adicionar
-                </button>
-            </th>
-        </template>
+                <Cabecalho>#</Cabecalho>
+                <Cabecalho>Descrição</Cabecalho>
+                <Cabecalho>
+                    <button type="button" class="btn btn-outline-secondary ml-auto rounded-0" v-on:click="novo">
+                        Adicionar
+                    </button>
+                </Cabecalho>               
+            </template>
 
-        <template v-slot:colunas>
-            <th scope="row">{{ colunas.item.ordem }}</th>
-            <td class="w-100">{{ colunas.item.descricao }}</td>
-            <td class="text-end pe-2">
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-0"
-                    v-on:click="editar(colunas.item.tarefaID);">
-                    Edi.
-                </button>
-            </td>
-        </template>
-        </ExibicaoGradeV2>
+            <template v-slot="linha">
+                <Coluna>{{ linha.item.ordem }}</Coluna>
+                <Coluna classes="w-100">{{ linha.item.descricao }}</Coluna>
+                <Coluna classes="text-end pe-2">
+                    <button type="button" class="btn btn-sm btn-outline-primary rounded-0"
+                        v-on:click="editar(linha.item.tarefaID);">
+                        Edi.
+                    </button>
+                </Coluna>               
+            </template>
+        </Grade>
     </div>
 
     <!-- Modal -->
@@ -236,8 +212,8 @@ export default {
                         <div class="row mb-3">
                             <label for="inputNumeroOrdenacao" class="col-sm-2 col-form-label">Numero Ordenação</label>
                             <div class="col-sm-10">
-                                <input type="number" v-model="tarefa.ordem"
-                                    class="form-control form-control-sm" id="inputNumeroOrdenacao" />
+                                <input type="number" v-model="tarefa.ordem" class="form-control form-control-sm"
+                                    id="inputNumeroOrdenacao" />
                             </div>
                         </div>
                     </div>
@@ -248,13 +224,11 @@ export default {
                                 Incluir
                             </button>
 
-                            <button v-if="!this.modoNovo" v-on:click="excluir" type="button"
-                                class="btn btn-danger">
+                            <button v-if="!this.modoNovo" v-on:click="excluir" type="button" class="btn btn-danger">
                                 Excluir
                             </button>
 
-                            <button v-if="!this.modoNovo" v-on:click="salvar" type="button"
-                                class="btn btn-primary">
+                            <button v-if="!this.modoNovo" v-on:click="salvar" type="button" class="btn btn-primary">
                                 Alterar
                             </button>
 
