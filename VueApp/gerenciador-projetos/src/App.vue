@@ -18,6 +18,7 @@ export default {
 
 <template>
     <div id="app">
+
         <header class="fixed-top">
             <nav class="navbar navbar-dark bg-dark">
                 <div class="container-fluid flex-nowrap justify-content-beetween">
@@ -83,7 +84,7 @@ export default {
         <div id="corpoPrincipal">
             <div class="container-fluid">
                 <div class="row justify-content-center">
-                    <div class="col-10">
+                    <div class="col-12">
                         <router-view></router-view>
                     </div>
                 </div>
@@ -121,7 +122,7 @@ header #navMenuPrincipal {
 #corpoPrincipal {
     height: 97vh;
     width: 100%;
-    padding: 50px;
+    padding: 50px 0;
     background-color: #fff;
 }
 
